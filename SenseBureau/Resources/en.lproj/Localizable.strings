@@ -1,0 +1,39 @@
+"screen.title" = "MAG FIELD";
+"screen.module" = "FIELD / 01";
+"screen.fieldStrength" = "FIELD STRENGTH";
+"screen.delta" = "DELTA";
+"screen.alert" = "ALERT";
+"screen.base" = "BASE";
+"screen.peak" = "PEAK Δ";
+"screen.samples" = "SAMPLES";
+"screen.history" = "SIGNAL HISTORY";
+"screen.historyRange" = "LAST 3.6 SEC";
+"screen.capability.real" = "Detects magnetic-field changes near magnets and ferromagnetic objects. It cannot identify every type of metal.";
+"screen.capability.demo" = "Simulator demo data · connect an iPhone to test the real magnetometer.";
+
+"status.ready" = "READY";
+"status.calibrating" = "CAL %d%%";
+"status.demo" = "DEMO";
+"status.live" = "LIVE";
+"status.paused" = "PAUSED";
+"status.unsupported" = "NO SENSOR";
+"status.error" = "ERROR";
+
+"signal.low" = "LOW";
+"signal.medium" = "MED";
+"signal.strong" = "STRONG";
+
+"action.calibrate" = "CALIBRATE";
+"action.pause" = "PAUSE";
+"action.resume" = "RESUME";
+
+"settings.title" = "SETTINGS";
+"settings.close" = "Close settings";
+"settings.open" = "Open settings";
+"settings.language.section" = "LANGUAGE";
+"settings.language.description" = "Choose the language used inside Sense Bureau. More languages will be added later.";
+"settings.language.selected" = "Selected";
+
+"accessibility.header" = "Magnetic field, status %@";
+"accessibility.fieldStrength" = "Field strength %d microteslas";
+"accessibility.history" = "Signal history chart with %d samples";

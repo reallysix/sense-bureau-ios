@@ -1,0 +1,39 @@
+"screen.title" = "磁场探测";
+"screen.module" = "磁场 / 01";
+"screen.fieldStrength" = "磁场强度";
+"screen.delta" = "变化";
+"screen.alert" = "阈值";
+"screen.base" = "基准";
+"screen.peak" = "峰值 Δ";
+"screen.samples" = "样本";
+"screen.history" = "信号历史";
+"screen.historyRange" = "最近 3.6 秒";
+"screen.capability.real" = "用于检测磁铁和铁磁物体附近的磁场变化，但不能识别所有类型的金属。";
+"screen.capability.demo" = "当前为模拟器演示数据 · 连接 iPhone 后可测试真实磁力计。";
+
+"status.ready" = "就绪";
+"status.calibrating" = "校准 %d%%";
+"status.demo" = "演示";
+"status.live" = "实时";
+"status.paused" = "已暂停";
+"status.unsupported" = "无传感器";
+"status.error" = "错误";
+
+"signal.low" = "低";
+"signal.medium" = "中";
+"signal.strong" = "强";
+
+"action.calibrate" = "重新校准";
+"action.pause" = "暂停";
+"action.resume" = "继续";
+
+"settings.title" = "设置";
+"settings.close" = "关闭设置";
+"settings.open" = "打开设置";
+"settings.language.section" = "语言";
+"settings.language.description" = "选择感知局内使用的语言，其他语言将在后续版本加入。";
+"settings.language.selected" = "已选择";
+
+"accessibility.header" = "磁场探测，状态：%@";
+"accessibility.fieldStrength" = "磁场强度 %d 微特斯拉";
+"accessibility.history" = "信号历史曲线，共 %d 个样本";

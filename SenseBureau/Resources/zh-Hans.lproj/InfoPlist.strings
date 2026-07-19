@@ -1,0 +1,2 @@
+"CFBundleDisplayName" = "感知局";
+"NSMotionUsageDescription" = "感知局使用运动传感器测量附近磁场的变化。";
