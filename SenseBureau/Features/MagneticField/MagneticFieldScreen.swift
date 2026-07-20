@@ -1,11 +1,15 @@
 import Charts
 import SwiftUI
+import SwiftData
 
 struct MagneticFieldScreen: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.senseTheme) private var theme
     @ObservedObject var model: MagneticFieldViewModel
     @State private var isShowingSettings = false
+    @State private var isShowingGuide = false
+    @State private var recordSaveState: RecordSaveState = .ready
 
     var body: some View {
         ZStack {
@@ -22,7 +26,11 @@ struct MagneticFieldScreen: View {
                     )
                     SignalPanel(model: model)
                     MetricStrip(model: model)
-                    HistoryPanel(samples: model.samples)
+                    AxisPanel(vector: model.latestVector)
+                    HistoryPanel(
+                        samples: model.samples,
+                        alertThreshold: model.alertThreshold
+                    )
                     CapabilityNote(isDemo: model.isDemo)
                 }
                 .padding(.horizontal, 20)
@@ -31,11 +39,59 @@ struct MagneticFieldScreen: View {
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            ControlDeck(model: model)
+            ControlDeck(
+                model: model,
+                recordSaveState: recordSaveState,
+                onSave: saveRecord
+            )
         }
         .sheet(isPresented: $isShowingSettings) {
             SettingsScreen(previewValue: Int(model.fieldStrength.rounded()))
                 .environmentObject(settings)
+        }
+        .fullScreenCover(isPresented: $isShowingGuide) {
+            MagneticGuideScreen {
+                model.calibrate()
+                settings.hasSeenMagneticGuide = true
+                isShowingGuide = false
+            }
+            .environmentObject(settings)
+        }
+        .onAppear {
+            isShowingGuide = !settings.hasSeenMagneticGuide
+        }
+        .onChange(of: settings.hasSeenMagneticGuide) { _, hasSeenGuide in
+            if !hasSeenGuide, !isShowingSettings {
+                isShowingGuide = true
+            }
+        }
+        .onChange(of: isShowingSettings) { _, isShowing in
+            if !isShowing, !settings.hasSeenMagneticGuide {
+                isShowingGuide = true
+            }
+        }
+    }
+
+    private func saveRecord() {
+        guard !model.samples.isEmpty else { return }
+
+        let record = MeasurementRecord(
+            kind: .magneticField,
+            value: model.fieldStrength,
+            unit: "μT",
+            peakValue: model.peakChange
+        )
+
+        do {
+            try MeasurementRecordStore(context: modelContext).save(record)
+            recordSaveState = .saved
+        } catch {
+            recordSaveState = .failed
+        }
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2))
+            recordSaveState = .ready
         }
     }
 
@@ -291,10 +347,69 @@ private struct MetricCell: View {
     }
 }
 
+private struct AxisPanel: View {
+    @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
+    let vector: MagneticVector
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: SenseTheme.Spacing.small) {
+            HStack {
+                Text(settings.text("screen.axes"))
+                    .font(SenseTheme.Typography.instrument(11))
+                    .tracking(1.2)
+                Spacer()
+                Text("μT")
+                    .font(SenseTheme.Typography.instrument(9))
+                    .foregroundStyle(theme.colors.textSecondary)
+            }
+
+            HStack(spacing: 1) {
+                AxisCell(axis: "X", value: vector.x)
+                AxisCell(axis: "Y", value: vector.y)
+                AxisCell(axis: "Z", value: vector.z)
+            }
+            .background(theme.colors.strokeSubtle)
+            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+        }
+        .foregroundStyle(theme.colors.textPrimary)
+    }
+}
+
+private struct AxisCell: View {
+    @Environment(\.senseTheme) private var theme
+    let axis: String
+    let value: Double
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: SenseTheme.Spacing.small) {
+            Text(axis)
+                .font(SenseTheme.Typography.instrument(10))
+                .foregroundStyle(theme.colors.signalPrimary)
+            Text(formattedValue)
+                .font(SenseTheme.Typography.instrument(16, weight: .medium))
+                .monospacedDigit()
+                .foregroundStyle(theme.colors.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.72)
+        }
+        .frame(maxWidth: .infinity, minHeight: 52)
+        .background(theme.colors.surfacePrimary)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("axis.\(axis.lowercased())")
+    }
+
+    private var formattedValue: String {
+        let roundedValue = Int(value.rounded())
+        return roundedValue >= 0 ? "+\(roundedValue)" : String(roundedValue)
+    }
+}
+
 private struct HistoryPanel: View {
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.senseTheme) private var theme
     let samples: [MagneticFieldSample]
+    let alertThreshold: Double
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -318,7 +433,7 @@ private struct HistoryPanel: View {
                     .foregroundStyle(theme.colors.textOnData)
                     .lineStyle(StrokeStyle(lineWidth: 1.8, lineJoin: .round))
                 }
-                RuleMark(y: .value("Alert", 30))
+                RuleMark(y: .value("Alert", alertThreshold))
                     .foregroundStyle(theme.colors.signalPrimary.opacity(0.9))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
             }
@@ -332,7 +447,10 @@ private struct HistoryPanel: View {
                         .foregroundStyle(theme.colors.textOnData.opacity(0.68))
                 }
             }
-            .chartYScale(domain: 0...max(40, (samples.map(\.magnitude).max() ?? 40) * 1.15))
+            .chartYScale(domain: 0...max(
+                alertThreshold * 1.15,
+                (samples.map(\.magnitude).max() ?? alertThreshold) * 1.15
+            ))
             .frame(height: 106)
         }
         .foregroundStyle(theme.colors.textOnData)
@@ -369,30 +487,41 @@ private struct ControlDeck: View {
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.senseTheme) private var theme
     @ObservedObject var model: MagneticFieldViewModel
+    let recordSaveState: RecordSaveState
+    let onSave: () -> Void
 
     var body: some View {
         HStack(spacing: 10) {
+            Button(action: onSave) {
+                DeckButtonLabel(
+                    title: settings.text(recordSaveState.titleKey),
+                    systemImage: recordSaveState.systemImage
+                )
+            }
+            .buttonStyle(InstrumentButtonStyle(kind: .secondary))
+            .accessibilityIdentifier("saveRecordButton")
+            .disabled(model.samples.isEmpty || recordSaveState == .saved)
+
             Button(action: model.calibrate) {
-                Label(settings.text("action.calibrate"), systemImage: "scope")
-                    .frame(maxWidth: .infinity)
+                DeckButtonLabel(
+                    title: settings.text("action.calibrate"),
+                    systemImage: "scope"
+                )
             }
             .buttonStyle(InstrumentButtonStyle(kind: .secondary))
             .accessibilityIdentifier("calibrateButton")
             .disabled(model.state == .unsupported)
 
             Button(action: model.togglePause) {
-                Label(
-                    settings.text(model.state == .paused ? "action.resume" : "action.pause"),
+                DeckButtonLabel(
+                    title: settings.text(model.state == .paused ? "action.resume" : "action.pause"),
                     systemImage: model.state == .paused ? "play.fill" : "pause.fill"
                 )
-                    .frame(maxWidth: .infinity)
             }
             .buttonStyle(InstrumentButtonStyle(kind: .primary))
             .accessibilityIdentifier("pauseResumeButton")
             .disabled(model.state != .active && model.state != .paused)
         }
-        .font(SenseTheme.Typography.instrument(11))
-        .tracking(0.7)
         .padding(.horizontal, 20)
         .padding(.top, 10)
         .padding(.bottom, 8)
@@ -405,8 +534,49 @@ private struct ControlDeck: View {
     }
 }
 
+private struct DeckButtonLabel: View {
+    let title: String
+    let systemImage: String
+
+    var body: some View {
+        VStack(spacing: 3) {
+            Image(systemName: systemImage)
+                .font(.system(size: 13, weight: .semibold))
+            Text(title)
+                .font(SenseTheme.Typography.instrument(9))
+                .tracking(0.4)
+                .lineLimit(1)
+                .minimumScaleFactor(0.72)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+private enum RecordSaveState: Equatable {
+    case ready
+    case saved
+    case failed
+
+    var titleKey: String {
+        switch self {
+        case .ready: "action.save"
+        case .saved: "status.saved"
+        case .failed: "status.saveError"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .ready: "archivebox"
+        case .saved: "checkmark"
+        case .failed: "exclamationmark.triangle"
+        }
+    }
+}
+
 private struct InstrumentButtonStyle: ButtonStyle {
     @Environment(\.senseTheme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
     enum Kind { case primary, secondary }
     let kind: Kind
 
@@ -421,7 +591,7 @@ private struct InstrumentButtonStyle: ButtonStyle {
             }
             .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
-            .opacity(configuration.isPressed ? 0.88 : 1)
+            .opacity(isEnabled ? (configuration.isPressed ? 0.88 : 1) : 0.44)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
 }

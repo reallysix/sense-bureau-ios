@@ -6,6 +6,7 @@
 "screen.base" = "基准";
 "screen.peak" = "峰值 Δ";
 "screen.samples" = "样本";
+"screen.axes" = "三轴原始值";
 "screen.history" = "信号历史";
 "screen.historyRange" = "最近 3.6 秒";
 "screen.capability.real" = "用于检测磁铁和铁磁物体附近的磁场变化，但不能识别所有类型的金属。";
@@ -18,6 +19,8 @@
 "status.paused" = "已暂停";
 "status.unsupported" = "无传感器";
 "status.error" = "错误";
+"status.saved" = "已保存";
+"status.saveError" = "重试";
 
 "signal.low" = "低";
 "signal.medium" = "中";
@@ -26,6 +29,23 @@
 "action.calibrate" = "重新校准";
 "action.pause" = "暂停";
 "action.resume" = "继续";
+"action.save" = "保存";
+
+"guide.status" = "首次使用";
+"guide.title" = "测量前须知";
+"guide.skip" = "跳过";
+"guide.hero.title" = "测量磁场变化，而不是识别所有金属。";
+"guide.hero.detail" = "iPhone 磁力计对磁铁、铁、钢、电机和附近电子设备产生的变化最敏感。";
+"guide.capability.section" = "能力边界";
+"guide.can.title" = "可以检测什么";
+"guide.can.detail" = "附近磁场强度变化，以及可重复出现的铁磁物体响应。";
+"guide.cannot.title" = "不能识别什么";
+"guide.cannot.detail" = "无法可靠识别铜、铝、金、银、隐藏电线或危险物品。";
+"guide.prepare.section" = "校准准备";
+"guide.prepare.remove" = "取下 MagSafe 手机壳、磁吸卡包、充电器和充电宝。";
+"guide.prepare.clear" = "远离电脑、扬声器、电机和大面积金属表面。";
+"guide.prepare.still" = "保持 iPhone 静止，等待基准校准完成。";
+"guide.begin" = "开始校准";
 
 "home.status" = "就绪";
 "home.title" = "感知实验室";
@@ -63,6 +83,15 @@
 "settings.theme.cartoon" = "趣味实验室";
 "settings.theme.description" = "切换视觉皮肤不会中断当前测量或重置数据。";
 "settings.theme.selected" = "已选择";
+"settings.measurement.section" = "测量反馈";
+"settings.sound" = "警报音效";
+"settings.haptics" = "警报触觉";
+"settings.threshold" = "警报阈值";
+"settings.measurement.description" = "磁场变化首次超过阈值时触发声音和触觉，信号回落后才会再次启用提醒。";
+"settings.capability.section" = "传感器说明";
+"settings.capability.title" = "磁场变化测量";
+"settings.capability.description" = "感知局测量磁场变化，不能识别所有金属，也不能用于安全判断。";
+"settings.guide.show" = "查看测量引导";
 
 "accessibility.header" = "磁场探测，状态：%@";
 "accessibility.fieldStrength" = "磁场强度 %d 微特斯拉";

@@ -1,6 +1,5 @@
 import Combine
 import Foundation
-import UIKit
 
 @MainActor
 final class MagneticFieldViewModel: ObservableObject {
@@ -10,8 +9,8 @@ final class MagneticFieldViewModel: ObservableObject {
     @Published private(set) var relativeChange = 0.0
     @Published private(set) var peakChange = 0.0
     @Published private(set) var samples: [MagneticFieldSample] = []
-
-    let alertThreshold = 30.0
+    @Published private(set) var latestVector = MagneticVector(x: 0, y: 0, z: 0)
+    @Published private(set) var alertThreshold = 30.0
 
     var isDemo: Bool { provider.isDemo }
     var isRunning: Bool { state == .active || isCalibrating }
@@ -28,18 +27,37 @@ final class MagneticFieldViewModel: ObservableObject {
     private(set) var isProviderRunning = false
 
     private let provider: MagnetometerProviding
+    private let feedback: any MeasurementFeedbackProviding
     private let calibrationSampleCount = 30
     private var calibrationValues: [Double] = []
     private var previousSmoothed: Double?
     private var hasTriggeredThreshold = false
     private var hasStartedSession = false
+    private var soundEnabled = true
+    private var hapticsEnabled = true
 
     init() {
         provider = MagnetometerProviderFactory.make()
+        feedback = MeasurementFeedbackController()
     }
 
-    init(provider: MagnetometerProviding) {
+    init(
+        provider: MagnetometerProviding,
+        feedback: any MeasurementFeedbackProviding = MeasurementFeedbackController()
+    ) {
         self.provider = provider
+        self.feedback = feedback
+    }
+
+    func configureFeedback(
+        soundEnabled: Bool,
+        hapticsEnabled: Bool,
+        alertThreshold: Double
+    ) {
+        self.soundEnabled = soundEnabled
+        self.hapticsEnabled = hapticsEnabled
+        self.alertThreshold = min(100, max(10, alertThreshold))
+        hasTriggeredThreshold = relativeChange >= self.alertThreshold
     }
 
     func start() {
@@ -75,6 +93,7 @@ final class MagneticFieldViewModel: ObservableObject {
         relativeChange = 0
         peakChange = 0
         samples.removeAll(keepingCapacity: true)
+        hasTriggeredThreshold = false
         state = .calibrating(progress: 0)
     }
 
@@ -98,6 +117,7 @@ final class MagneticFieldViewModel: ObservableObject {
     }
 
     private func process(_ vector: MagneticVector) {
+        latestVector = vector
         let raw = MagneticFieldMath.magnitude(of: vector)
         let smoothed = MagneticFieldMath.smoothed(previous: previousSmoothed, current: raw)
         previousSmoothed = smoothed
@@ -111,6 +131,10 @@ final class MagneticFieldViewModel: ObservableObject {
                let calibratedBaseline = MagneticFieldMath.baseline(from: calibrationValues) {
                 baseline = calibratedBaseline
                 state = .active
+                feedback.calibrationCompleted(
+                    soundEnabled: soundEnabled,
+                    hapticsEnabled: hapticsEnabled
+                )
             }
             return
         }
@@ -125,7 +149,10 @@ final class MagneticFieldViewModel: ObservableObject {
 
     private func updateThresholdFeedback() {
         if relativeChange >= alertThreshold, !hasTriggeredThreshold {
-            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+            feedback.thresholdExceeded(
+                soundEnabled: soundEnabled,
+                hapticsEnabled: hapticsEnabled
+            )
             hasTriggeredThreshold = true
         } else if relativeChange < alertThreshold * 0.7 {
             hasTriggeredThreshold = false

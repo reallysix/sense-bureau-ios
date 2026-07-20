@@ -6,6 +6,7 @@
 "screen.base" = "BASE";
 "screen.peak" = "PEAK Δ";
 "screen.samples" = "SAMPLES";
+"screen.axes" = "RAW AXES";
 "screen.history" = "SIGNAL HISTORY";
 "screen.historyRange" = "LAST 3.6 SEC";
 "screen.capability.real" = "Detects magnetic-field changes near magnets and ferromagnetic objects. It cannot identify every type of metal.";
@@ -18,6 +19,8 @@
 "status.paused" = "PAUSED";
 "status.unsupported" = "NO SENSOR";
 "status.error" = "ERROR";
+"status.saved" = "SAVED";
+"status.saveError" = "RETRY";
 
 "signal.low" = "LOW";
 "signal.medium" = "MED";
@@ -26,6 +29,23 @@
 "action.calibrate" = "CALIBRATE";
 "action.pause" = "PAUSE";
 "action.resume" = "RESUME";
+"action.save" = "SAVE";
+
+"guide.status" = "FIRST RUN";
+"guide.title" = "BEFORE YOU MEASURE";
+"guide.skip" = "SKIP";
+"guide.hero.title" = "Measure magnetic-field changes — not every metal.";
+"guide.hero.detail" = "Your iPhone magnetometer reacts most clearly to magnets, iron, steel, motors, and nearby electronics.";
+"guide.capability.section" = "CAPABILITY BOUNDARY";
+"guide.can.title" = "What it can detect";
+"guide.can.detail" = "Nearby changes in magnetic-field strength and repeatable ferromagnetic responses.";
+"guide.cannot.title" = "What it cannot identify";
+"guide.cannot.detail" = "It cannot reliably identify copper, aluminum, gold, silver, hidden wires, or dangerous objects.";
+"guide.prepare.section" = "PREPARE FOR CALIBRATION";
+"guide.prepare.remove" = "Remove MagSafe cases, magnetic wallets, chargers, and power banks.";
+"guide.prepare.clear" = "Move away from laptops, speakers, motors, and large metal surfaces.";
+"guide.prepare.still" = "Hold the iPhone still while the baseline calibration completes.";
+"guide.begin" = "START CALIBRATION";
 
 "home.status" = "READY";
 "home.title" = "SENSE LAB";
@@ -63,6 +83,15 @@
 "settings.theme.cartoon" = "Playful Lab";
 "settings.theme.description" = "Switch the visual skin without interrupting the current measurement.";
 "settings.theme.selected" = "Selected";
+"settings.measurement.section" = "MEASUREMENT";
+"settings.sound" = "Alert sound";
+"settings.haptics" = "Alert haptics";
+"settings.threshold" = "Alert threshold";
+"settings.measurement.description" = "Sound and haptics trigger once when the change crosses your threshold, then reset after the signal falls.";
+"settings.capability.section" = "ABOUT THE SENSOR";
+"settings.capability.title" = "Magnetic-field measurement";
+"settings.capability.description" = "Sense Bureau measures magnetic-field changes. It does not identify every metal and must not be used for safety decisions.";
+"settings.guide.show" = "SHOW MEASUREMENT GUIDE";
 
 "accessibility.header" = "Magnetic field, status %@";
 "accessibility.fieldStrength" = "Field strength %d microteslas";

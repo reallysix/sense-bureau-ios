@@ -25,6 +25,7 @@ enum AppSection: String, CaseIterable, Identifiable {
 }
 
 struct AppShell: View {
+    @EnvironmentObject private var settings: AppSettings
     @Environment(\.senseTheme) private var theme
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -60,6 +61,18 @@ struct AppShell: View {
         .onChange(of: scenePhase) { _, _ in
             updateMeasurementActivity()
         }
+        .onChange(of: settings.soundEnabled) { _, _ in
+            updateMeasurementActivity()
+        }
+        .onChange(of: settings.hapticsEnabled) { _, _ in
+            updateMeasurementActivity()
+        }
+        .onChange(of: settings.alertThreshold) { _, _ in
+            updateMeasurementActivity()
+        }
+        .onChange(of: settings.hasSeenMagneticGuide) { _, _ in
+            updateMeasurementActivity()
+        }
     }
 
     private func select(_ section: AppSection) {
@@ -69,7 +82,15 @@ struct AppShell: View {
     }
 
     private func updateMeasurementActivity() {
-        if selection == .field, scenePhase == .active {
+        magneticModel.configureFeedback(
+            soundEnabled: settings.soundEnabled,
+            hapticsEnabled: settings.hapticsEnabled,
+            alertThreshold: settings.alertThreshold
+        )
+
+        if selection == .field,
+           scenePhase == .active,
+           settings.hasSeenMagneticGuide {
             magneticModel.start()
         } else {
             magneticModel.stop()

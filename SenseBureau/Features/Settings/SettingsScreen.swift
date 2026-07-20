@@ -38,6 +38,66 @@ struct SettingsScreen: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
 
+                        settingsSection(title: settings.text("settings.measurement.section")) {
+                            VStack(spacing: 1) {
+                                SettingToggleRow(
+                                    title: settings.text("settings.sound"),
+                                    systemImage: "speaker.wave.2",
+                                    isOn: $settings.soundEnabled
+                                )
+                                .accessibilityIdentifier("settings.sound")
+
+                                SettingToggleRow(
+                                    title: settings.text("settings.haptics"),
+                                    systemImage: "iphone.radiowaves.left.and.right",
+                                    isOn: $settings.hapticsEnabled
+                                )
+                                .accessibilityIdentifier("settings.haptics")
+                            }
+                            .background(theme.colors.strokeSubtle)
+                            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+
+                            VStack(alignment: .leading, spacing: SenseTheme.Spacing.medium) {
+                                HStack {
+                                    Label(
+                                        settings.text("settings.threshold"),
+                                        systemImage: "gauge.with.needle"
+                                    )
+                                    .font(.body.weight(.medium))
+                                    Spacer()
+                                    Text("\(Int(settings.alertThreshold)) μT")
+                                        .font(SenseTheme.Typography.instrument(13))
+                                        .foregroundStyle(theme.colors.signalPrimary)
+                                        .accessibilityIdentifier("thresholdValue")
+                                }
+
+                                Slider(
+                                    value: $settings.alertThreshold,
+                                    in: 10...100,
+                                    step: 5
+                                )
+                                .tint(theme.colors.signalPrimary)
+                                .accessibilityIdentifier("settings.threshold")
+
+                                HStack {
+                                    Text("10 μT")
+                                    Spacer()
+                                    Text("100 μT")
+                                }
+                                .font(SenseTheme.Typography.instrument(9))
+                                .foregroundStyle(theme.colors.textSecondary)
+                            }
+                            .foregroundStyle(theme.colors.textPrimary)
+                            .padding(SenseTheme.Spacing.large)
+                            .background(theme.colors.surfacePrimary)
+                            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+
+                            Text(settings.text("settings.measurement.description"))
+                                .font(.footnote)
+                                .foregroundStyle(theme.colors.textSecondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+
                         settingsSection(title: settings.text("settings.theme.section")) {
                             HStack(spacing: SenseTheme.Spacing.medium) {
                                 ForEach(AppTheme.allCases) { option in
@@ -64,6 +124,41 @@ struct SettingsScreen: View {
                                 .font(.footnote)
                                 .foregroundStyle(theme.colors.textSecondary)
                                 .fixedSize(horizontal: false, vertical: true)
+                        }
+
+                        settingsSection(title: settings.text("settings.capability.section")) {
+                            VStack(alignment: .leading, spacing: SenseTheme.Spacing.medium) {
+                                Label(
+                                    settings.text("settings.capability.title"),
+                                    systemImage: "info.circle"
+                                )
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(theme.colors.textPrimary)
+
+                                Text(settings.text("settings.capability.description"))
+                                    .font(.footnote)
+                                    .foregroundStyle(theme.colors.textSecondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+
+                                Button {
+                                    settings.hasSeenMagneticGuide = false
+                                } label: {
+                                    Label(
+                                        settings.text("settings.guide.show"),
+                                        systemImage: "book.pages"
+                                    )
+                                    .font(SenseTheme.Typography.instrument(10))
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundStyle(theme.colors.textOnSignal)
+                                .background(theme.colors.signalPrimary)
+                                .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+                                .accessibilityIdentifier("settings.showGuide")
+                            }
+                            .padding(SenseTheme.Spacing.large)
+                            .background(theme.colors.surfacePrimary)
+                            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
                         }
                     }
                     .padding(.horizontal, 20)
@@ -147,6 +242,25 @@ struct SettingsScreen: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("language.\(language.rawValue)")
+    }
+}
+
+private struct SettingToggleRow: View {
+    @Environment(\.senseTheme) private var theme
+    let title: String
+    let systemImage: String
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle(isOn: $isOn) {
+            Label(title, systemImage: systemImage)
+                .font(.body.weight(.medium))
+                .foregroundStyle(theme.colors.textPrimary)
+        }
+        .tint(theme.colors.signalPrimary)
+        .padding(.horizontal, SenseTheme.Spacing.large)
+        .frame(minHeight: 60)
+        .background(theme.colors.surfacePrimary)
     }
 }
 
