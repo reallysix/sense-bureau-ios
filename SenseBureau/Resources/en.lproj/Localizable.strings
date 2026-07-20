@@ -27,6 +27,31 @@
 "action.pause" = "PAUSE";
 "action.resume" = "RESUME";
 
+"home.status" = "READY";
+"home.title" = "SENSE LAB";
+"home.module" = "LAB / 04";
+"home.hero.title" = "POCKET SENSOR LAB";
+"home.hero.detail" = "Turn the sensors already inside your iPhone into clear, useful instruments.";
+"home.hero.unit" = "TOOLS";
+"home.tools" = "TOOLS";
+"home.readyCount" = "%d / %d READY";
+
+"tool.magnetic.name" = "Magnetic Field";
+"tool.magnetic.detail" = "Measure nearby magnetic-field changes.";
+"tool.vibration.name" = "Vibration";
+"tool.vibration.detail" = "Analyze acceleration and short vibration peaks.";
+"tool.level.name" = "Level & Tilt";
+"tool.level.detail" = "Check level state and X/Y tilt angles.";
+"tool.barometer.name" = "Pressure & Height";
+"tool.barometer.detail" = "Track relative pressure and height changes.";
+"tool.status.ready" = "READY";
+"tool.status.next" = "NEXT";
+
+"nav.lab" = "LAB";
+"nav.field" = "FIELD";
+"nav.settings" = "SETTINGS";
+"nav.selected" = "Selected";
+
 "settings.title" = "SETTINGS";
 "settings.close" = "Close settings";
 "settings.open" = "Open settings";

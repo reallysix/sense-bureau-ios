@@ -10,6 +10,7 @@ final class SenseBureauUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-appLanguage", "en"]
         app.launch()
+        app.buttons["nav.field"].tap()
 
         let screenTitle = app.staticTexts["screenTitle"]
         XCTAssertTrue(screenTitle.waitForExistence(timeout: 3))
@@ -41,6 +42,7 @@ final class SenseBureauUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-appLanguage", "en"]
         app.launch()
+        app.buttons["nav.field"].tap()
 
         app.buttons["settingsButton"].tap()
 
@@ -59,6 +61,7 @@ final class SenseBureauUITests: XCTestCase {
         app.terminate()
         app.launchArguments = []
         app.launch()
+        app.buttons["nav.field"].tap()
         XCTAssertEqual(app.staticTexts["screenTitle"].label, "磁场探测")
     }
 
@@ -67,6 +70,7 @@ final class SenseBureauUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-appLanguage", "en", "-appTheme", "techSignal"]
         app.launch()
+        app.buttons["nav.field"].tap()
 
         let pauseResumeButton = app.buttons["pauseResumeButton"]
         XCTAssertTrue(pauseResumeButton.waitForExistence(timeout: 5))
@@ -97,9 +101,47 @@ final class SenseBureauUITests: XCTestCase {
         app.terminate()
         app.launchArguments = ["-appLanguage", "en"]
         app.launch()
+        app.buttons["nav.field"].tap()
         app.buttons["settingsButton"].tap()
         XCTAssertTrue(app.buttons["theme.cartoonExplorer"].waitForExistence(timeout: 3))
         XCTAssertEqual(app.buttons["theme.cartoonExplorer"].value as? String, "Selected")
+    }
+
+    @MainActor
+    func testNavigationPreservesPausedMeasurementSession() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-appLanguage", "en", "-appTheme", "techSignal"]
+        app.launch()
+
+        let homeTitle = app.staticTexts["homeTitle"]
+        XCTAssertTrue(homeTitle.waitForExistence(timeout: 3))
+        XCTAssertEqual(homeTitle.label, "SENSE LAB")
+        XCTAssertFalse(app.buttons["tool.vibration"].isEnabled)
+        captureScreen(named: "stage2-home-tech-en")
+
+        app.buttons["tool.magneticField"].tap()
+        let pauseResumeButton = app.buttons["pauseResumeButton"]
+        XCTAssertTrue(pauseResumeButton.waitForExistence(timeout: 5))
+        let enabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "isEnabled == true"),
+            object: pauseResumeButton
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [enabled], timeout: 5), .completed)
+        pauseResumeButton.tap()
+        XCTAssertEqual(pauseResumeButton.label, "RESUME")
+        captureScreen(named: "stage2-field-tech-en-paused")
+
+        app.buttons["nav.lab"].tap()
+        XCTAssertTrue(homeTitle.waitForExistence(timeout: 3))
+        app.buttons["nav.field"].tap()
+        XCTAssertTrue(pauseResumeButton.waitForExistence(timeout: 3))
+        XCTAssertEqual(pauseResumeButton.label, "RESUME")
+        XCTAssertTrue(pauseResumeButton.isEnabled)
+
+        app.buttons["nav.settings"].tap()
+        XCTAssertTrue(app.staticTexts["settingsTitle"].waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["closeSettingsButton"].exists)
+        captureScreen(named: "stage2-settings-tech-en")
     }
 
     private func captureScreen(named name: String) {

@@ -38,11 +38,15 @@ struct ThemeDefinition {
             surfaceData: Color(hex: 0x595E63),
             signalPrimary: Color(hex: 0xF63101),
             signalPressed: Color(hex: 0xD92B00),
+            signalBright: Color(hex: 0xF94921),
             textPrimary: Color(hex: 0xF5F5F2),
             textSecondary: Color(hex: 0xA09FA3),
             textOnSignal: Color(hex: 0x151515),
             textOnData: Color(hex: 0x111315),
-            strokeSubtle: Color(hex: 0x3D3C42)
+            strokeSubtle: Color(hex: 0x3D3C42),
+            navigationSurface: Color(hex: 0x202224),
+            navigationText: Color(hex: 0xA09FA3),
+            critical: Color(hex: 0xFF453A)
         ),
         radius: ThemeRadius(small: 6, medium: 10, large: 16, navigation: 22),
         colorScheme: .dark
@@ -57,11 +61,15 @@ struct ThemeDefinition {
             surfaceData: Color(hex: 0xC7C7CD),
             signalPrimary: Color(hex: 0xF94921),
             signalPressed: Color(hex: 0xD92B00),
+            signalBright: Color(hex: 0xFF6544),
             textPrimary: Color(hex: 0x242326),
             textSecondary: Color(hex: 0x66636A),
             textOnSignal: Color(hex: 0x171517),
             textOnData: Color(hex: 0x242326),
-            strokeSubtle: Color(hex: 0xB6B3BA)
+            strokeSubtle: Color(hex: 0xB6B3BA),
+            navigationSurface: Color(hex: 0x242326),
+            navigationText: Color(hex: 0xB6B3BA),
+            critical: Color(hex: 0xD72F27)
         ),
         radius: ThemeRadius(small: 8, medium: 14, large: 18, navigation: 22),
         colorScheme: .light
@@ -75,11 +83,15 @@ struct ThemeColors {
     let surfaceData: Color
     let signalPrimary: Color
     let signalPressed: Color
+    let signalBright: Color
     let textPrimary: Color
     let textSecondary: Color
     let textOnSignal: Color
     let textOnData: Color
     let strokeSubtle: Color
+    let navigationSurface: Color
+    let navigationText: Color
+    let critical: Color
 }
 
 struct ThemeRadius {

@@ -4,7 +4,7 @@ import SwiftUI
 struct MagneticFieldScreen: View {
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.senseTheme) private var theme
-    @StateObject private var model = MagneticFieldViewModel()
+    @ObservedObject var model: MagneticFieldViewModel
     @State private var isShowingSettings = false
 
     var body: some View {
@@ -33,8 +33,6 @@ struct MagneticFieldScreen: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             ControlDeck(model: model)
         }
-        .task { model.start() }
-        .onDisappear { model.stop() }
         .sheet(isPresented: $isShowingSettings) {
             SettingsScreen(previewValue: Int(model.fieldStrength.rounded()))
                 .environmentObject(settings)

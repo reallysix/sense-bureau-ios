@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct SenseBureauApp: App {
@@ -6,11 +7,12 @@ struct SenseBureauApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MagneticFieldScreen()
+            AppShell()
                 .environmentObject(settings)
                 .environment(\.locale, settings.language.locale)
                 .environment(\.senseTheme, settings.theme.definition)
                 .preferredColorScheme(settings.theme.definition.colorScheme)
+                .modelContainer(for: MeasurementRecord.self)
         }
     }
 }

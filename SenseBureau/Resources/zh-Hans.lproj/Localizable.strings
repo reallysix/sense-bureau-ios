@@ -27,6 +27,31 @@
 "action.pause" = "暂停";
 "action.resume" = "继续";
 
+"home.status" = "就绪";
+"home.title" = "感知实验室";
+"home.module" = "实验室 / 04";
+"home.hero.title" = "随身传感器实验室";
+"home.hero.detail" = "把 iPhone 已有的传感器，变成清晰、实用、随手可用的测量工具。";
+"home.hero.unit" = "工具";
+"home.tools" = "工具";
+"home.readyCount" = "%d / %d 可用";
+
+"tool.magnetic.name" = "磁场探测";
+"tool.magnetic.detail" = "测量附近磁场的变化。";
+"tool.vibration.name" = "振动分析";
+"tool.vibration.detail" = "分析加速度与短时振动峰值。";
+"tool.level.name" = "水平与倾角";
+"tool.level.detail" = "查看水平状态与 X/Y 倾斜角度。";
+"tool.barometer.name" = "气压与高度";
+"tool.barometer.detail" = "跟踪相对气压与高度变化。";
+"tool.status.ready" = "可用";
+"tool.status.next" = "后续";
+
+"nav.lab" = "实验室";
+"nav.field" = "磁场";
+"nav.settings" = "设置";
+"nav.selected" = "已选择";
+
 "settings.title" = "设置";
 "settings.close" = "关闭设置";
 "settings.open" = "打开设置";

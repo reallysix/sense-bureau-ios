@@ -7,6 +7,12 @@ struct SettingsScreen: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let previewValue: Int
+    let showsCloseButton: Bool
+
+    init(previewValue: Int, showsCloseButton: Bool = true) {
+        self.previewValue = previewValue
+        self.showsCloseButton = showsCloseButton
+    }
 
     var body: some View {
         ZStack {
@@ -91,16 +97,18 @@ struct SettingsScreen: View {
 
             Spacer()
 
-            Button(action: dismiss.callAsFunction) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(theme.colors.textPrimary)
-                    .frame(width: 44, height: 44)
-                    .background(theme.colors.surfacePrimary)
-                    .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+            if showsCloseButton {
+                Button(action: dismiss.callAsFunction) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(theme.colors.textPrimary)
+                        .frame(width: 44, height: 44)
+                        .background(theme.colors.surfacePrimary)
+                        .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+                }
+                .accessibilityLabel(settings.text("settings.close"))
+                .accessibilityIdentifier("closeSettingsButton")
             }
-            .accessibilityLabel(settings.text("settings.close"))
-            .accessibilityIdentifier("closeSettingsButton")
         }
         .padding(.horizontal, 20)
         .padding(.vertical, SenseTheme.Spacing.small)

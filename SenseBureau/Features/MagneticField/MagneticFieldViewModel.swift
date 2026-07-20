@@ -4,16 +4,7 @@ import UIKit
 
 @MainActor
 final class MagneticFieldViewModel: ObservableObject {
-    enum SessionState: Equatable {
-        case idle
-        case calibrating(progress: Double)
-        case active
-        case paused
-        case unsupported
-        case failed
-    }
-
-    @Published private(set) var state: SessionState = .idle
+    @Published private(set) var state: MeasurementSessionState = .idle
     @Published private(set) var fieldStrength = 0.0
     @Published private(set) var baseline = 0.0
     @Published private(set) var relativeChange = 0.0
@@ -34,11 +25,14 @@ final class MagneticFieldViewModel: ObservableObject {
         return state == .active ? 1 : 0
     }
 
+    private(set) var isProviderRunning = false
+
     private let provider: MagnetometerProviding
     private let calibrationSampleCount = 30
     private var calibrationValues: [Double] = []
     private var previousSmoothed: Double?
     private var hasTriggeredThreshold = false
+    private var hasStartedSession = false
 
     init() {
         provider = MagnetometerProviderFactory.make()
@@ -53,12 +47,23 @@ final class MagneticFieldViewModel: ObservableObject {
             state = .unsupported
             return
         }
-        calibrate()
+        guard !isProviderRunning, state != .paused else { return }
+        if !hasStartedSession {
+            hasStartedSession = true
+            calibrate()
+        }
+        startProvider()
+    }
+
+    private func startProvider() {
+        isProviderRunning = true
         provider.start { [weak self] result in
             guard let self else { return }
             switch result {
             case let .success(vector): process(vector)
-            case .failure: state = .failed
+            case .failure:
+                isProviderRunning = false
+                state = .failed
             }
         }
     }
@@ -76,21 +81,20 @@ final class MagneticFieldViewModel: ObservableObject {
     func togglePause() {
         switch state {
         case .active:
-            provider.stop()
+            stop()
             state = .paused
         case .paused:
             state = .active
-            provider.start { [weak self] result in
-                guard let self else { return }
-                if case let .success(vector) = result { process(vector) }
-            }
+            startProvider()
         default:
             break
         }
     }
 
     func stop() {
+        guard isProviderRunning else { return }
         provider.stop()
+        isProviderRunning = false
     }
 
     private func process(_ vector: MagneticVector) {

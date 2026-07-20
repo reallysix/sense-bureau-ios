@@ -1,8 +1,8 @@
 # 感知局（Sense Bureau）设计规范
 
-版本：1.0  
+版本：1.1
 状态：后续 UI 开发的强制设计基线  
-更新日期：2026-07-15
+更新日期：2026-07-20
 
 ## 1. 使用方式
 
@@ -92,6 +92,8 @@
 | `textOnSignal` | `#151515` | 橙色背景上的文字和图形 |
 | `textOnData` | `#111315` | 灰色数据屏上的高对比文字 |
 | `strokeSubtle` | `#3D3C42` | 分割线、轨道、弱边框 |
+| `navigationSurface` | `#202224` | 底部导航一体化容器 |
+| `navigationText` | `#A09FA3` | 底部导航未选中项 |
 | `paperCanvas` | `#DADADF` | 未来浅色/卡通皮肤的共享中性底，不用于默认科技主屏 |
 | `critical` | `#FF453A` | 系统错误或真正的危险提示，不表示普通“强信号” |
 
@@ -324,11 +326,15 @@
 | `surfaceData` | `#C7C7CD` |
 | `signalPrimary` | `#F94921` |
 | `signalPressed` | `#D92B00` |
+| `signalBright` | `#FF6544` |
 | `textPrimary` | `#242326` |
 | `textSecondary` | `#66636A` |
 | `textOnSignal` | `#171517` |
 | `textOnData` | `#242326` |
 | `strokeSubtle` | `#B6B3BA` |
+| `navigationSurface` | `#242326` |
+| `navigationText` | `#B6B3BA` |
+| `critical` | `#D72F27` |
 
 圆角使用 `small 8pt / medium 14pt / large 18pt / navigation 22pt`。主题预览必须使用当前测量读数，不展示伪造数据；在正式角色插画方案确定前，功能图标继续使用 SF Symbols。
 
