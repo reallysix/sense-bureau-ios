@@ -33,6 +33,11 @@
 "settings.language.section" = "语言";
 "settings.language.description" = "选择感知局内使用的语言，其他语言将在后续版本加入。";
 "settings.language.selected" = "已选择";
+"settings.theme.section" = "外观皮肤";
+"settings.theme.tech" = "科技信号";
+"settings.theme.cartoon" = "趣味实验室";
+"settings.theme.description" = "切换视觉皮肤不会中断当前测量或重置数据。";
+"settings.theme.selected" = "已选择";
 
 "accessibility.header" = "磁场探测，状态：%@";
 "accessibility.fieldStrength" = "磁场强度 %d 微特斯拉";

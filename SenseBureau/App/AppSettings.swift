@@ -23,17 +23,29 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 final class AppSettings: ObservableObject {
     private enum Keys {
         static let language = "appLanguage"
+        static let theme = "appTheme"
     }
+
+    private let defaults: UserDefaults
 
     @Published var language: AppLanguage {
         didSet {
-            UserDefaults.standard.set(language.rawValue, forKey: Keys.language)
+            defaults.set(language.rawValue, forKey: Keys.language)
         }
     }
 
-    init() {
-        let storedLanguage = UserDefaults.standard.string(forKey: Keys.language)
+    @Published var theme: AppTheme {
+        didSet {
+            defaults.set(theme.rawValue, forKey: Keys.theme)
+        }
+    }
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        let storedLanguage = defaults.string(forKey: Keys.language)
+        let storedTheme = defaults.string(forKey: Keys.theme)
         language = AppLanguage(rawValue: storedLanguage ?? "") ?? .simplifiedChinese
+        theme = AppTheme(rawValue: storedTheme ?? "") ?? .techSignal
     }
 
     func text(_ key: String, _ arguments: CVarArg...) -> String {

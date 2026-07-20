@@ -33,6 +33,11 @@
 "settings.language.section" = "LANGUAGE";
 "settings.language.description" = "Choose the language used inside Sense Bureau. More languages will be added later.";
 "settings.language.selected" = "Selected";
+"settings.theme.section" = "APPEARANCE";
+"settings.theme.tech" = "Tech Signal";
+"settings.theme.cartoon" = "Playful Lab";
+"settings.theme.description" = "Switch the visual skin without interrupting the current measurement.";
+"settings.theme.selected" = "Selected";
 
 "accessibility.header" = "Magnetic field, status %@";
 "accessibility.fieldStrength" = "Field strength %d microteslas";

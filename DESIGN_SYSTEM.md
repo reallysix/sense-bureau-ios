@@ -312,6 +312,26 @@
 - 禁止使用 emoji、CSS/SwiftUI 几何拼图或随意手绘符号冒充最终角色和图标。
 - 卡通皮肤可以更圆润、更有弹性，但必须保持数据密度和仪器可信度。
 
+### 阶段 1 卡通原型令牌
+
+阶段 1 使用主题 ID `cartoonExplorer`，中文名称“趣味实验室”，英文名称“Playful Lab”。当前原型采用“明亮纸张仪表 + 珊瑚信号色”的方向，不加入未经确认的角色插画。
+
+| 语义令牌 | 色值 |
+| --- | --- |
+| `canvasPrimary` | `#DADADF` |
+| `surfacePrimary` | `#F7F5F7` |
+| `surfaceRaised` | `#E9E5EA` |
+| `surfaceData` | `#C7C7CD` |
+| `signalPrimary` | `#F94921` |
+| `signalPressed` | `#D92B00` |
+| `textPrimary` | `#242326` |
+| `textSecondary` | `#66636A` |
+| `textOnSignal` | `#171517` |
+| `textOnData` | `#242326` |
+| `strokeSubtle` | `#B6B3BA` |
+
+圆角使用 `small 8pt / medium 14pt / large 18pt / navigation 22pt`。主题预览必须使用当前测量读数，不展示伪造数据；在正式角色插画方案确定前，功能图标继续使用 SF Symbols。
+
 ### SwiftUI 实现约束
 
 - View 只能引用语义令牌，例如 `theme.colors.canvasPrimary`，禁止在业务 View 中直接写十六进制色值。

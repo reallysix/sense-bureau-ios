@@ -11,13 +11,14 @@
 		0D76C42B4F78BD7EB20E92EE /* SenseBureauApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A3A28FA80314CB15DF2A4F /* SenseBureauApp.swift */; };
 		2796EDDD5590D22106FB080A /* MagneticFieldDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2C83D1D768457350848314 /* MagneticFieldDomain.swift */; };
 		2C5C13FFD1058B2433AFFC1B /* OFL-Doto.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4086C22F8C461EA588B15EE6 /* OFL-Doto.txt */; };
+		3873F003801C81339AEC7D58 /* SenseTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0445E20FE455B396B952E7B /* SenseTheme.swift */; };
 		461DD84653E67FB02AE552CB /* MagnetometerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D595B19CF4FD0C4723DC674B /* MagnetometerProvider.swift */; };
 		5A82B26295447049C3C39916 /* MagneticFieldScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF0E23BEF4D60095BE7EF24 /* MagneticFieldScreen.swift */; };
 		65424F7E27D785F04057BDC4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8CC0CA5EDA9312CA0D770EC1 /* Localizable.strings */; };
 		65B403412C4F75E2D96ED44E /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653834B19686F722C2B9BBD0 /* SettingsScreen.swift */; };
+		757AED7246D0FF00CED8AF05 /* AppSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BF698AEDB494928973630B /* AppSettingsTests.swift */; };
 		AC26995CCEE8EC4F9F7C7CA6 /* Doto-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1719C44304F1E62EF56E068D /* Doto-Variable.ttf */; };
 		ACB093002EC73D5E1406CD0C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FF9AB3A6F558D6BD35993F04 /* InfoPlist.strings */; };
-		CAED9CEFD78F6C138DB23BF9 /* TechSignalTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50518EB9A1734D564DDF2A90 /* TechSignalTheme.swift */; };
 		D3F479BF8B1B07CDB3D26F0A /* MagneticFieldMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12D92C025BC8E5B67329194 /* MagneticFieldMathTests.swift */; };
 		DC1C768F9103773EE9B720C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6F7A6AAB3434B9861252BCC /* Assets.xcassets */; };
 		EBD1979818510CF48768079F /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A1F20FB33DA1FF0511D83E /* AppSettings.swift */; };
@@ -47,7 +48,6 @@
 		2A3038056FC20A00D3567C56 /* MagneticFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagneticFieldViewModel.swift; sourceTree = "<group>"; };
 		4086C22F8C461EA588B15EE6 /* OFL-Doto.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Doto.txt"; sourceTree = "<group>"; };
 		4C0C13B03FA4EFA191120570 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		50518EB9A1734D564DDF2A90 /* TechSignalTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechSignalTheme.swift; sourceTree = "<group>"; };
 		596B2AF0760CFC791B4F6913 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		653834B19686F722C2B9BBD0 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		7B2C83D1D768457350848314 /* MagneticFieldDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagneticFieldDomain.swift; sourceTree = "<group>"; };
@@ -55,6 +55,8 @@
 		93A1F20FB33DA1FF0511D83E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		A6A3A28FA80314CB15DF2A4F /* SenseBureauApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenseBureauApp.swift; sourceTree = "<group>"; };
 		AE2810B58BA8F677D2835884 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B0445E20FE455B396B952E7B /* SenseTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenseTheme.swift; sourceTree = "<group>"; };
+		B2BF698AEDB494928973630B /* AppSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsTests.swift; sourceTree = "<group>"; };
 		BFA551BCAD45419578D28943 /* SenseBureau.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SenseBureau.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D595B19CF4FD0C4723DC674B /* MagnetometerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagnetometerProvider.swift; sourceTree = "<group>"; };
 		DBCC42D4E75A65B5FA4837D0 /* SenseBureauTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SenseBureauTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +136,7 @@
 		BA3CA6F46E4E1A0382CC1B10 /* SenseBureauTests */ = {
 			isa = PBXGroup;
 			children = (
+				B2BF698AEDB494928973630B /* AppSettingsTests.swift */,
 				F12D92C025BC8E5B67329194 /* MagneticFieldMathTests.swift */,
 			);
 			path = SenseBureauTests;
@@ -166,7 +169,7 @@
 		D9098432E700F4C14AC7B1C1 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
-				50518EB9A1734D564DDF2A90 /* TechSignalTheme.swift */,
+				B0445E20FE455B396B952E7B /* SenseTheme.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				757AED7246D0FF00CED8AF05 /* AppSettingsTests.swift in Sources */,
 				D3F479BF8B1B07CDB3D26F0A /* MagneticFieldMathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,8 +317,8 @@
 				ED5A58D8D8BECF1304C5A124 /* MagneticFieldViewModel.swift in Sources */,
 				461DD84653E67FB02AE552CB /* MagnetometerProvider.swift in Sources */,
 				0D76C42B4F78BD7EB20E92EE /* SenseBureauApp.swift in Sources */,
+				3873F003801C81339AEC7D58 /* SenseTheme.swift in Sources */,
 				65B403412C4F75E2D96ED44E /* SettingsScreen.swift in Sources */,
-				CAED9CEFD78F6C138DB23BF9 /* TechSignalTheme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

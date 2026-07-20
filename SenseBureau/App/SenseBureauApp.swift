@@ -9,7 +9,8 @@ struct SenseBureauApp: App {
             MagneticFieldScreen()
                 .environmentObject(settings)
                 .environment(\.locale, settings.language.locale)
-                .preferredColorScheme(.dark)
+                .environment(\.senseTheme, settings.theme.definition)
+                .preferredColorScheme(settings.theme.definition.colorScheme)
         }
     }
 }

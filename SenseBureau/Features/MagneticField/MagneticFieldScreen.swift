@@ -3,15 +3,16 @@ import SwiftUI
 
 struct MagneticFieldScreen: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
     @StateObject private var model = MagneticFieldViewModel()
     @State private var isShowingSettings = false
 
     var body: some View {
         ZStack {
-            TechSignalTheme.Colors.canvasPrimary.ignoresSafeArea()
+            theme.colors.canvasPrimary.ignoresSafeArea()
 
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: TechSignalTheme.Spacing.medium) {
+                VStack(spacing: SenseTheme.Spacing.medium) {
                     InstrumentHeader(
                         status: localizedStatus,
                         title: settings.text("screen.title"),
@@ -35,7 +36,7 @@ struct MagneticFieldScreen: View {
         .task { model.start() }
         .onDisappear { model.stop() }
         .sheet(isPresented: $isShowingSettings) {
-            SettingsScreen()
+            SettingsScreen(previewValue: Int(model.fieldStrength.rounded()))
                 .environmentObject(settings)
         }
     }
@@ -59,6 +60,7 @@ struct MagneticFieldScreen: View {
 }
 
 private struct InstrumentHeader: View {
+    @Environment(\.senseTheme) private var theme
     let status: String
     let title: String
     let module: String
@@ -66,26 +68,26 @@ private struct InstrumentHeader: View {
     let onShowSettings: () -> Void
 
     var body: some View {
-        HStack(spacing: TechSignalTheme.Spacing.small) {
+        HStack(spacing: SenseTheme.Spacing.small) {
             TagLabel(text: status, emphasized: true)
             Spacer(minLength: 8)
             Text(title)
-                .font(TechSignalTheme.Typography.instrument(14))
+                .font(SenseTheme.Typography.instrument(14))
                 .tracking(2.2)
-                .foregroundStyle(TechSignalTheme.Colors.textPrimary)
+                .foregroundStyle(theme.colors.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .accessibilityIdentifier("screenTitle")
             Spacer(minLength: 8)
-            HStack(spacing: TechSignalTheme.Spacing.xSmall) {
+            HStack(spacing: SenseTheme.Spacing.xSmall) {
                 TagLabel(text: module)
                 Button(action: onShowSettings) {
                     Image(systemName: "gearshape")
                         .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(TechSignalTheme.Colors.textPrimary)
+                        .foregroundStyle(theme.colors.textPrimary)
                         .frame(width: 36, height: 28)
-                        .background(TechSignalTheme.Colors.surfacePrimary)
-                        .clipShape(RoundedRectangle(cornerRadius: TechSignalTheme.Radius.small))
+                        .background(theme.colors.surfacePrimary)
+                        .clipShape(RoundedRectangle(cornerRadius: theme.radius.small))
                 }
                 .accessibilityLabel(settingsLabel)
                 .accessibilityIdentifier("settingsButton")
@@ -96,23 +98,27 @@ private struct InstrumentHeader: View {
 }
 
 private struct TagLabel: View {
+    @Environment(\.senseTheme) private var theme
     let text: String
     var emphasized = false
 
     var body: some View {
         Text(text)
-            .font(TechSignalTheme.Typography.instrument(10))
+            .font(SenseTheme.Typography.instrument(10))
             .tracking(0.9)
-            .foregroundStyle(emphasized ? TechSignalTheme.Colors.textOnSignal : TechSignalTheme.Colors.textSecondary)
+            .lineLimit(1)
+            .minimumScaleFactor(0.72)
+            .foregroundStyle(emphasized ? theme.colors.textOnSignal : theme.colors.textSecondary)
             .padding(.horizontal, 9)
             .frame(height: 28)
-            .background(emphasized ? TechSignalTheme.Colors.signalPrimary : TechSignalTheme.Colors.surfacePrimary)
-            .clipShape(RoundedRectangle(cornerRadius: TechSignalTheme.Radius.small))
+            .background(emphasized ? theme.colors.signalPrimary : theme.colors.surfacePrimary)
+            .clipShape(RoundedRectangle(cornerRadius: theme.radius.small))
     }
 }
 
 private struct SignalPanel: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
     @ObservedObject var model: MagneticFieldViewModel
 
     private var normalizedChange: Double {
@@ -123,22 +129,22 @@ private struct SignalPanel: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .firstTextBaseline) {
                 Text(settings.text("screen.fieldStrength"))
-                    .font(TechSignalTheme.Typography.instrument(12))
+                    .font(SenseTheme.Typography.instrument(12))
                     .tracking(1.2)
                 Spacer()
                 Text(localizedSignalLevel)
-                    .font(TechSignalTheme.Typography.instrument(11))
+                    .font(SenseTheme.Typography.instrument(11))
                     .tracking(1.2)
             }
 
             HStack(alignment: .lastTextBaseline, spacing: 8) {
                 Text(model.state == .unsupported ? "—" : String(Int(model.fieldStrength.rounded())))
-                    .font(TechSignalTheme.Typography.displayDot(76))
+                    .font(SenseTheme.Typography.displayDot(76))
                     .contentTransition(.numericText())
                     .lineLimit(1)
                     .minimumScaleFactor(0.72)
                 Text("μT")
-                    .font(TechSignalTheme.Typography.instrument(17))
+                    .font(SenseTheme.Typography.instrument(17))
                     .padding(.bottom, 10)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -159,11 +165,11 @@ private struct SignalPanel: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .foregroundStyle(TechSignalTheme.Colors.textOnSignal)
+        .foregroundStyle(theme.colors.textOnSignal)
         .padding(16)
         .frame(maxWidth: .infinity, minHeight: 326, alignment: .topLeading)
-        .background(TechSignalTheme.Colors.signalPrimary)
-        .clipShape(RoundedRectangle(cornerRadius: TechSignalTheme.Radius.medium))
+        .background(theme.colors.signalPrimary)
+        .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
     }
 
     private var localizedSignalLevel: String {
@@ -186,15 +192,15 @@ private struct SmallReading: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)
-                .font(TechSignalTheme.Typography.instrument(10))
+                .font(SenseTheme.Typography.instrument(10))
                 .tracking(1)
                 .opacity(0.64)
             HStack(alignment: .firstTextBaseline, spacing: 3) {
                 Text(String(Int(value.rounded())))
-                    .font(TechSignalTheme.Typography.instrument(22, weight: .bold))
+                    .font(SenseTheme.Typography.instrument(22, weight: .bold))
                     .monospacedDigit()
                 Text(unit)
-                    .font(TechSignalTheme.Typography.instrument(10))
+                    .font(SenseTheme.Typography.instrument(10))
             }
         }
     }
@@ -202,22 +208,23 @@ private struct SmallReading: View {
 
 private struct RadialFieldGauge: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
     let progress: Double
     let value: Double
 
     var body: some View {
         ZStack {
             Circle()
-                .fill(TechSignalTheme.Colors.canvasPrimary)
+                .fill(theme.colors.canvasPrimary)
                 .overlay {
-                    Circle().stroke(TechSignalTheme.Colors.textOnSignal, lineWidth: 2)
+                    Circle().stroke(theme.colors.textOnSignal, lineWidth: 2)
                 }
 
             ForEach(0..<48, id: \.self) { index in
                 let isMajor = index.isMultiple(of: 6)
                 let isActive = Double(index) / 47 <= progress
                 Capsule()
-                    .fill(isActive ? TechSignalTheme.Colors.signalPrimary : TechSignalTheme.Colors.strokeSubtle)
+                    .fill(isActive ? theme.colors.signalPrimary : theme.colors.strokeSubtle)
                     .frame(width: isMajor ? 3 : 1.5, height: isMajor ? 17 : 10)
                     .offset(y: -78)
                     .rotationEffect(.degrees(Double(index) * 7.5))
@@ -225,17 +232,17 @@ private struct RadialFieldGauge: View {
 
             VStack(spacing: 2) {
                 Text(settings.text("screen.delta"))
-                    .font(TechSignalTheme.Typography.instrument(10))
+                    .font(SenseTheme.Typography.instrument(10))
                     .tracking(1.4)
-                    .foregroundStyle(TechSignalTheme.Colors.textSecondary)
+                    .foregroundStyle(theme.colors.textSecondary)
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text(String(Int(value.rounded())))
-                        .font(TechSignalTheme.Typography.instrument(38, weight: .medium))
+                        .font(SenseTheme.Typography.instrument(38, weight: .medium))
                         .monospacedDigit()
                     Text("μT")
-                        .font(TechSignalTheme.Typography.instrument(10))
+                        .font(SenseTheme.Typography.instrument(10))
                 }
-                .foregroundStyle(TechSignalTheme.Colors.textPrimary)
+                .foregroundStyle(theme.colors.textPrimary)
             }
         }
         .accessibilityHidden(true)
@@ -244,6 +251,7 @@ private struct RadialFieldGauge: View {
 
 private struct MetricStrip: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
     @ObservedObject var model: MagneticFieldViewModel
 
     var body: some View {
@@ -252,12 +260,13 @@ private struct MetricStrip: View {
             MetricCell(label: settings.text("screen.peak"), value: model.peakChange)
             MetricCell(label: settings.text("screen.samples"), text: String(model.samples.count))
         }
-        .background(TechSignalTheme.Colors.strokeSubtle)
-        .clipShape(RoundedRectangle(cornerRadius: TechSignalTheme.Radius.medium))
+        .background(theme.colors.strokeSubtle)
+        .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
     }
 }
 
 private struct MetricCell: View {
+    @Environment(\.senseTheme) private var theme
     let label: String
     var value: Double?
     var text: String?
@@ -265,38 +274,39 @@ private struct MetricCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(label)
-                .font(TechSignalTheme.Typography.instrument(9))
+                .font(SenseTheme.Typography.instrument(9))
                 .tracking(0.9)
-                .foregroundStyle(TechSignalTheme.Colors.textSecondary)
+                .foregroundStyle(theme.colors.textSecondary)
             Text(text ?? String(Int((value ?? 0).rounded())))
-                .font(TechSignalTheme.Typography.instrument(22, weight: .medium))
+                .font(SenseTheme.Typography.instrument(22, weight: .medium))
                 .monospacedDigit()
-                .foregroundStyle(TechSignalTheme.Colors.textPrimary)
+                .foregroundStyle(theme.colors.textPrimary)
             if value != nil {
                 Text("μT")
-                    .font(TechSignalTheme.Typography.instrument(9))
-                    .foregroundStyle(TechSignalTheme.Colors.textSecondary)
+                    .font(SenseTheme.Typography.instrument(9))
+                    .foregroundStyle(theme.colors.textSecondary)
             }
         }
         .frame(maxWidth: .infinity, minHeight: 80, alignment: .leading)
         .padding(.horizontal, 12)
-        .background(TechSignalTheme.Colors.surfacePrimary)
+        .background(theme.colors.surfacePrimary)
     }
 }
 
 private struct HistoryPanel: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
     let samples: [MagneticFieldSample]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(settings.text("screen.history"))
-                    .font(TechSignalTheme.Typography.instrument(11))
+                    .font(SenseTheme.Typography.instrument(11))
                     .tracking(1.2)
                 Spacer()
                 Text(settings.text("screen.historyRange"))
-                    .font(TechSignalTheme.Typography.instrument(9))
+                    .font(SenseTheme.Typography.instrument(9))
                     .tracking(0.8)
                     .opacity(0.62)
             }
@@ -307,30 +317,30 @@ private struct HistoryPanel: View {
                         x: .value("Time", sample.timestamp),
                         y: .value("Delta", sample.magnitude)
                     )
-                    .foregroundStyle(TechSignalTheme.Colors.textOnData)
+                    .foregroundStyle(theme.colors.textOnData)
                     .lineStyle(StrokeStyle(lineWidth: 1.8, lineJoin: .round))
                 }
                 RuleMark(y: .value("Alert", 30))
-                    .foregroundStyle(TechSignalTheme.Colors.signalPrimary.opacity(0.9))
+                    .foregroundStyle(theme.colors.signalPrimary.opacity(0.9))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
             }
             .chartXAxis(.hidden)
             .chartYAxis {
                 AxisMarks(position: .leading, values: .automatic(desiredCount: 3)) { _ in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 0.6))
-                        .foregroundStyle(TechSignalTheme.Colors.textOnData.opacity(0.28))
+                        .foregroundStyle(theme.colors.textOnData.opacity(0.28))
                     AxisValueLabel()
-                        .font(TechSignalTheme.Typography.instrument(8))
-                        .foregroundStyle(TechSignalTheme.Colors.textOnData.opacity(0.68))
+                        .font(SenseTheme.Typography.instrument(8))
+                        .foregroundStyle(theme.colors.textOnData.opacity(0.68))
                 }
             }
             .chartYScale(domain: 0...max(40, (samples.map(\.magnitude).max() ?? 40) * 1.15))
             .frame(height: 106)
         }
-        .foregroundStyle(TechSignalTheme.Colors.textOnData)
+        .foregroundStyle(theme.colors.textOnData)
         .padding(14)
-        .background(TechSignalTheme.Colors.surfaceData)
-        .clipShape(RoundedRectangle(cornerRadius: TechSignalTheme.Radius.medium))
+        .background(theme.colors.surfaceData)
+        .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(settings.text("accessibility.history", samples.count))
     }
@@ -338,17 +348,18 @@ private struct HistoryPanel: View {
 
 private struct CapabilityNote: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
     let isDemo: Bool
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: isDemo ? "waveform.path.ecg" : "info.circle")
                 .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(TechSignalTheme.Colors.signalPrimary)
+                .foregroundStyle(theme.colors.signalPrimary)
                 .accessibilityHidden(true)
             Text(settings.text(isDemo ? "screen.capability.demo" : "screen.capability.real"))
                 .font(.system(size: 12, weight: .regular))
-                .foregroundStyle(TechSignalTheme.Colors.textSecondary)
+                .foregroundStyle(theme.colors.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -358,6 +369,7 @@ private struct CapabilityNote: View {
 
 private struct ControlDeck: View {
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
     @ObservedObject var model: MagneticFieldViewModel
 
     var body: some View {
@@ -381,34 +393,35 @@ private struct ControlDeck: View {
             .accessibilityIdentifier("pauseResumeButton")
             .disabled(model.state != .active && model.state != .paused)
         }
-        .font(TechSignalTheme.Typography.instrument(11))
+        .font(SenseTheme.Typography.instrument(11))
         .tracking(0.7)
         .padding(.horizontal, 20)
         .padding(.top, 10)
         .padding(.bottom, 8)
-        .background(TechSignalTheme.Colors.canvasPrimary)
+        .background(theme.colors.canvasPrimary)
         .overlay(alignment: .top) {
             Rectangle()
-                .fill(TechSignalTheme.Colors.strokeSubtle)
+                .fill(theme.colors.strokeSubtle)
                 .frame(height: 1)
         }
     }
 }
 
 private struct InstrumentButtonStyle: ButtonStyle {
+    @Environment(\.senseTheme) private var theme
     enum Kind { case primary, secondary }
     let kind: Kind
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(kind == .primary ? TechSignalTheme.Colors.textOnSignal : TechSignalTheme.Colors.textPrimary)
+            .foregroundStyle(kind == .primary ? theme.colors.textOnSignal : theme.colors.textPrimary)
             .frame(height: 48)
-            .background(kind == .primary ? TechSignalTheme.Colors.signalPrimary : TechSignalTheme.Colors.surfacePrimary)
+            .background(kind == .primary ? theme.colors.signalPrimary : theme.colors.surfacePrimary)
             .overlay {
-                RoundedRectangle(cornerRadius: TechSignalTheme.Radius.medium)
-                    .stroke(kind == .primary ? Color.clear : TechSignalTheme.Colors.strokeSubtle, lineWidth: 1)
+                RoundedRectangle(cornerRadius: theme.radius.medium)
+                    .stroke(kind == .primary ? Color.clear : theme.colors.strokeSubtle, lineWidth: 1)
             }
-            .clipShape(RoundedRectangle(cornerRadius: TechSignalTheme.Radius.medium))
+            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .opacity(configuration.isPressed ? 0.88 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
