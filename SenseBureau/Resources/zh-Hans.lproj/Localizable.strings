@@ -31,6 +31,38 @@
 "action.resume" = "继续";
 "action.save" = "保存";
 
+"sensor.demo.note" = "模拟器演示数据 · 请使用 iPhone 测量真实运动数据。";
+
+"vibration.title" = "振动分析";
+"vibration.module" = "运动 / 02";
+"vibration.current" = "当前振动";
+"vibration.rms" = "均方根";
+"vibration.peak" = "峰值";
+"vibration.samples" = "样本";
+"vibration.history" = "振动历史";
+"vibration.window" = "最近 3 秒";
+"vibration.calibrate" = "基准";
+"vibration.level.still" = "静止";
+"vibration.level.light" = "轻微";
+"vibration.level.strong" = "强烈";
+"vibration.accessibility.current" = "振动强度 %d 毫重力";
+
+"level.title" = "水平 / 倾角";
+"level.module" = "角度 / 03";
+"level.tilt" = "总倾角";
+"level.axis" = "%@ 轴";
+"level.zero" = "归零";
+"level.zeroing" = "归零 %d%%";
+"level.state.level" = "水平";
+"level.state.near" = "接近水平";
+"level.state.tilted" = "倾斜";
+"level.guidance" = "位置引导";
+"level.guidance.level" = "手机已在 0.5 度范围内保持水平。";
+"level.guidance.near" = "轻微调整，让气泡回到中央。";
+"level.guidance.tilted" = "沿气泡偏移方向调整，使表面恢复水平。";
+"level.zero.description" = "归零会把当前位置设为参考，不会改变传感器本身的物理精度。";
+"level.accessibility.tilt" = "总倾角 %.1f 度";
+
 "guide.status" = "首次使用";
 "guide.title" = "测量前须知";
 "guide.skip" = "跳过";
@@ -69,6 +101,8 @@
 
 "nav.lab" = "实验室";
 "nav.field" = "磁场";
+"nav.vibration" = "振动";
+"nav.level" = "水平";
 "nav.settings" = "设置";
 "nav.selected" = "已选择";
 

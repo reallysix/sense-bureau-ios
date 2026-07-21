@@ -5,6 +5,8 @@ struct LabHomeScreen: View {
     @Environment(\.senseTheme) private var theme
 
     let onOpenMagneticField: () -> Void
+    let onOpenVibration: () -> Void
+    let onOpenLevel: () -> Void
 
     private var tools: [LabTool] {
         [
@@ -21,16 +23,16 @@ struct LabHomeScreen: View {
                 name: settings.text("tool.vibration.name"),
                 detail: settings.text("tool.vibration.detail"),
                 icon: "waveform",
-                status: settings.text("tool.status.next"),
-                isAvailable: false
+                status: settings.text("tool.status.ready"),
+                isAvailable: true
             ),
             LabTool(
                 id: .level,
                 name: settings.text("tool.level.name"),
                 detail: settings.text("tool.level.detail"),
                 icon: "level",
-                status: settings.text("tool.status.next"),
-                isAvailable: false
+                status: settings.text("tool.status.ready"),
+                isAvailable: true
             ),
             LabTool(
                 id: .barometer,
@@ -55,7 +57,7 @@ struct LabHomeScreen: View {
                         .tracking(1.2)
                         .foregroundStyle(theme.colors.textPrimary)
                     Spacer()
-                    Text(settings.text("home.readyCount", 1, tools.count))
+                    Text(settings.text("home.readyCount", 3, tools.count))
                         .font(SenseTheme.Typography.instrument(9))
                         .foregroundStyle(theme.colors.textSecondary)
                 }
@@ -64,8 +66,15 @@ struct LabHomeScreen: View {
                 VStack(spacing: SenseTheme.Spacing.small) {
                     ForEach(tools) { tool in
                         Button {
-                            if tool.id == .magneticField {
+                            switch tool.id {
+                            case .magneticField:
                                 onOpenMagneticField()
+                            case .vibration:
+                                onOpenVibration()
+                            case .level:
+                                onOpenLevel()
+                            case .barometer:
+                                break
                             }
                         } label: {
                             LabToolCard(tool: tool)

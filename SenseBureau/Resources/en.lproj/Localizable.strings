@@ -31,6 +31,38 @@
 "action.resume" = "RESUME";
 "action.save" = "SAVE";
 
+"sensor.demo.note" = "Simulator demo data · use an iPhone to measure real motion.";
+
+"vibration.title" = "VIBRATION";
+"vibration.module" = "MOTION / 02";
+"vibration.current" = "VIBRATION LEVEL";
+"vibration.rms" = "RMS";
+"vibration.peak" = "PEAK";
+"vibration.samples" = "SAMPLES";
+"vibration.history" = "VIBRATION HISTORY";
+"vibration.window" = "LAST 3 SEC";
+"vibration.calibrate" = "BASELINE";
+"vibration.level.still" = "STILL";
+"vibration.level.light" = "LIGHT";
+"vibration.level.strong" = "STRONG";
+"vibration.accessibility.current" = "Vibration level %d milligravity";
+
+"level.title" = "LEVEL / TILT";
+"level.module" = "ANGLE / 03";
+"level.tilt" = "TOTAL TILT";
+"level.axis" = "%@ AXIS";
+"level.zero" = "ZERO";
+"level.zeroing" = "ZERO %d%%";
+"level.state.level" = "LEVEL";
+"level.state.near" = "NEAR LEVEL";
+"level.state.tilted" = "TILTED";
+"level.guidance" = "POSITION GUIDE";
+"level.guidance.level" = "The phone is level within 0.5 degrees.";
+"level.guidance.near" = "Make a small adjustment toward the center.";
+"level.guidance.tilted" = "Follow the bubble toward the center to level the surface.";
+"level.zero.description" = "ZERO treats the current position as the reference; it does not change the sensor's physical accuracy.";
+"level.accessibility.tilt" = "Total tilt %.1f degrees";
+
 "guide.status" = "FIRST RUN";
 "guide.title" = "BEFORE YOU MEASURE";
 "guide.skip" = "SKIP";
@@ -69,6 +101,8 @@
 
 "nav.lab" = "LAB";
 "nav.field" = "FIELD";
+"nav.vibration" = "VIBE";
+"nav.level" = "LEVEL";
 "nav.settings" = "SETTINGS";
 "nav.selected" = "Selected";
 

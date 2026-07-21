@@ -26,7 +26,7 @@ targets:
         UILaunchScreen: {}
         UIAppFonts:
           - Doto-Variable.ttf
-        NSMotionUsageDescription: Sense Bureau uses motion sensors to measure nearby magnetic-field changes.
+        NSMotionUsageDescription: Sense Bureau uses motion sensors to measure magnetic-field changes, vibration, and device level.
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         UIApplicationSceneManifest:

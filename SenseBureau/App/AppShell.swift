@@ -3,6 +3,8 @@ import SwiftUI
 enum AppSection: String, CaseIterable, Identifiable {
     case lab
     case field
+    case vibration
+    case level
     case settings
 
     var id: String { rawValue }
@@ -11,6 +13,8 @@ enum AppSection: String, CaseIterable, Identifiable {
         switch self {
         case .lab: "square.grid.2x2"
         case .field: "scope"
+        case .vibration: "waveform"
+        case .level: "level"
         case .settings: "gearshape"
         }
     }
@@ -19,6 +23,8 @@ enum AppSection: String, CaseIterable, Identifiable {
         switch self {
         case .lab: "nav.lab"
         case .field: "nav.field"
+        case .vibration: "nav.vibration"
+        case .level: "nav.level"
         case .settings: "nav.settings"
         }
     }
@@ -31,6 +37,8 @@ struct AppShell: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @StateObject private var magneticModel = MagneticFieldViewModel()
+    @StateObject private var vibrationModel = VibrationViewModel()
+    @StateObject private var levelModel = LevelViewModel()
     @State private var selection: AppSection = .lab
 
     var body: some View {
@@ -39,11 +47,17 @@ struct AppShell: View {
 
             switch selection {
             case .lab:
-                LabHomeScreen {
-                    select(.field)
-                }
+                LabHomeScreen(
+                    onOpenMagneticField: { select(.field) },
+                    onOpenVibration: { select(.vibration) },
+                    onOpenLevel: { select(.level) }
+                )
             case .field:
                 MagneticFieldScreen(model: magneticModel)
+            case .vibration:
+                VibrationScreen(model: vibrationModel)
+            case .level:
+                LevelScreen(model: levelModel)
             case .settings:
                 SettingsScreen(
                     previewValue: Int(magneticModel.fieldStrength.rounded()),
@@ -87,6 +101,14 @@ struct AppShell: View {
             hapticsEnabled: settings.hapticsEnabled,
             alertThreshold: settings.alertThreshold
         )
+        vibrationModel.configureFeedback(
+            soundEnabled: settings.soundEnabled,
+            hapticsEnabled: settings.hapticsEnabled
+        )
+        levelModel.configureFeedback(
+            soundEnabled: settings.soundEnabled,
+            hapticsEnabled: settings.hapticsEnabled
+        )
 
         if selection == .field,
            scenePhase == .active,
@@ -94,6 +116,18 @@ struct AppShell: View {
             magneticModel.start()
         } else {
             magneticModel.stop()
+        }
+
+        if selection == .vibration, scenePhase == .active {
+            vibrationModel.start()
+        } else {
+            vibrationModel.stop()
+        }
+
+        if selection == .level, scenePhase == .active {
+            levelModel.start()
+        } else {
+            levelModel.stop()
         }
     }
 }

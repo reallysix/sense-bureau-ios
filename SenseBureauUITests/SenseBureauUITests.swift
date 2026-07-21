@@ -116,7 +116,9 @@ final class SenseBureauUITests: XCTestCase {
         let homeTitle = app.staticTexts["homeTitle"]
         XCTAssertTrue(homeTitle.waitForExistence(timeout: 3))
         XCTAssertEqual(homeTitle.label, "SENSE LAB")
-        XCTAssertFalse(app.buttons["tool.vibration"].isEnabled)
+        XCTAssertTrue(app.buttons["tool.vibration"].isEnabled)
+        XCTAssertTrue(app.buttons["tool.level"].isEnabled)
+        XCTAssertFalse(app.buttons["tool.barometer"].isEnabled)
         captureScreen(named: "stage2-home-tech-en")
 
         app.buttons["tool.magneticField"].tap()
@@ -223,6 +225,62 @@ final class SenseBureauUITests: XCTestCase {
         captureScreen(named: "stage3-guide-cartoon-zh-Hans")
         app.buttons["guide.skip"].tap()
         XCTAssertTrue(app.buttons["pauseResumeButton"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testMotionModulesMeasureSaveAndPreservePause() throws {
+        let app = XCUIApplication()
+        app.launchArguments = standardArguments(language: "en", theme: "techSignal")
+        app.launch()
+
+        app.buttons["tool.vibration"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["vibration.current"].waitForExistence(timeout: 4))
+        let vibrationPause = app.buttons["vibration.pause"]
+        let vibrationReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "isEnabled == true"),
+            object: vibrationPause
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [vibrationReady], timeout: 4), .completed)
+        vibrationPause.tap()
+        XCTAssertEqual(vibrationPause.label, "RESUME")
+        let vibrationSave = app.buttons["vibration.save"]
+        XCTAssertTrue(vibrationSave.isEnabled)
+        vibrationSave.tap()
+        XCTAssertEqual(app.staticTexts["sensor.status"].label, "SAVED")
+        XCTAssertEqual(vibrationSave.label, "SAVE")
+        XCTAssertFalse(app.buttons["vibration.calibrate"].isEnabled)
+        captureScreen(named: "stage3b-vibration-tech-en-paused")
+
+        app.buttons["nav.level"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["level.tilt"].waitForExistence(timeout: 4))
+        XCTAssertTrue(app.descendants(matching: .any)["level.axis.x"].exists)
+        app.buttons["level.zero"].tap()
+        let levelPause = app.buttons["level.pause"]
+        let levelReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "isEnabled == true"),
+            object: levelPause
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [levelReady], timeout: 4), .completed)
+        captureScreen(named: "stage3b-level-tech-en-zeroed")
+
+        app.buttons["nav.vibration"].tap()
+        XCTAssertTrue(vibrationPause.waitForExistence(timeout: 3))
+        XCTAssertEqual(vibrationPause.label, "RESUME")
+    }
+
+    @MainActor
+    func testMotionModulesRenderInChineseCartoonTheme() throws {
+        let app = XCUIApplication()
+        app.launchArguments = standardArguments(language: "zh-Hans", theme: "cartoonExplorer")
+        app.launch()
+
+        app.buttons["tool.vibration"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["vibration.current"].waitForExistence(timeout: 4))
+        captureScreen(named: "stage3b-vibration-cartoon-zh-Hans")
+
+        app.buttons["nav.level"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["level.tilt"].waitForExistence(timeout: 4))
+        captureScreen(named: "stage3b-level-cartoon-zh-Hans")
     }
 
     private func standardArguments(language: String? = nil, theme: String? = nil) -> [String] {

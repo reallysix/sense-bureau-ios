@@ -21,7 +21,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Sense Bureau uses motion sensors to measure nearby magnetic-field changes.</string>
+	<string>Sense Bureau uses motion sensors to measure magnetic-field changes, vibration, and device level.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Doto-Variable.ttf</string>
