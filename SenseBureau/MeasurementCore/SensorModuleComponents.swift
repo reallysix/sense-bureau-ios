@@ -49,14 +49,65 @@ struct SensorDemoNote: View {
     @Environment(\.senseTheme) private var theme
 
     let isDemo: Bool
+    var textKey = "sensor.demo.note"
 
     var body: some View {
         if isDemo {
-            Label(settings.text("sensor.demo.note"), systemImage: "waveform.path")
+            Label(settings.text(textKey), systemImage: "waveform.path")
                 .font(.footnote)
                 .foregroundStyle(theme.colors.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, SenseTheme.Spacing.small)
+        }
+    }
+}
+
+struct SensorStateNotice: View {
+    @EnvironmentObject private var settings: AppSettings
+    @Environment(\.senseTheme) private var theme
+
+    let state: MeasurementSessionState
+
+    var body: some View {
+        if let content {
+            HStack(alignment: .top, spacing: SenseTheme.Spacing.medium) {
+                Image(systemName: content.icon)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(theme.colors.critical)
+                    .frame(width: 24)
+
+                VStack(alignment: .leading, spacing: SenseTheme.Spacing.xSmall) {
+                    Text(settings.text(content.titleKey))
+                        .font(.body.weight(.semibold))
+                    Text(settings.text(content.detailKey))
+                        .font(.footnote)
+                        .foregroundStyle(theme.colors.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .foregroundStyle(theme.colors.textPrimary)
+            .padding(SenseTheme.Spacing.large)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(theme.colors.surfacePrimary)
+            .overlay {
+                RoundedRectangle(cornerRadius: theme.radius.medium)
+                    .stroke(theme.colors.critical, lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+            .accessibilityIdentifier("sensor.stateNotice")
+        }
+    }
+
+    private var content: (titleKey: String, detailKey: String, icon: String)? {
+        switch state {
+        case .unsupported:
+            ("sensor.unsupported.title", "sensor.unsupported.detail", "sensor.slash")
+        case .denied:
+            ("sensor.denied.title", "sensor.denied.detail", "hand.raised")
+        case .failed:
+            ("sensor.failed.title", "sensor.failed.detail", "exclamationmark.triangle")
+        default:
+            nil
         }
     }
 }

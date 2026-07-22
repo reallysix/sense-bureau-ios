@@ -1,2 +1,2 @@
 "CFBundleDisplayName" = "感知局";
-"NSMotionUsageDescription" = "感知局使用运动传感器测量磁场变化、振动和设备倾角。";
+"NSMotionUsageDescription" = "感知局使用运动传感器测量磁场变化、振动、设备倾角、气压和相对高度。";

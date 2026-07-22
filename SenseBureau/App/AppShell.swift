@@ -31,15 +31,24 @@ enum AppSection: String, CaseIterable, Identifiable {
 }
 
 struct AppShell: View {
+    private enum LabRoute {
+        case home
+        case barometer
+    }
+
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.senseTheme) private var theme
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.modelContext) private var modelContext
 
     @StateObject private var magneticModel = MagneticFieldViewModel()
     @StateObject private var vibrationModel = VibrationViewModel()
     @StateObject private var levelModel = LevelViewModel()
+    @StateObject private var barometerModel = BarometerViewModel()
     @State private var selection: AppSection = .lab
+    @State private var labRoute: LabRoute = .home
+    @State private var didResetUITestRecords = false
 
     var body: some View {
         ZStack {
@@ -47,11 +56,19 @@ struct AppShell: View {
 
             switch selection {
             case .lab:
-                LabHomeScreen(
-                    onOpenMagneticField: { select(.field) },
-                    onOpenVibration: { select(.vibration) },
-                    onOpenLevel: { select(.level) }
-                )
+                switch labRoute {
+                case .home:
+                    LabHomeScreen(
+                        onOpenMagneticField: { select(.field) },
+                        onOpenVibration: { select(.vibration) },
+                        onOpenLevel: { select(.level) },
+                        onOpenBarometer: {
+                            labRoute = .barometer
+                        }
+                    )
+                case .barometer:
+                    BarometerScreen(model: barometerModel)
+                }
             case .field:
                 MagneticFieldScreen(model: magneticModel)
             case .vibration:
@@ -66,10 +83,16 @@ struct AppShell: View {
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            AppNavigationBar(selection: $selection)
+            AppNavigationBar(selection: selection, onSelect: select)
         }
-        .onAppear(perform: updateMeasurementActivity)
+        .onAppear {
+            resetRecordsForUITestsIfNeeded()
+            updateMeasurementActivity()
+        }
         .onChange(of: selection) { _, _ in
+            updateMeasurementActivity()
+        }
+        .onChange(of: labRoute) { _, _ in
             updateMeasurementActivity()
         }
         .onChange(of: scenePhase) { _, _ in
@@ -90,6 +113,9 @@ struct AppShell: View {
     }
 
     private func select(_ section: AppSection) {
+        if section == .lab {
+            labRoute = .home
+        }
         withAnimation(reduceMotion ? nil : .easeOut(duration: 0.18)) {
             selection = section
         }
@@ -129,19 +155,35 @@ struct AppShell: View {
         } else {
             levelModel.stop()
         }
+
+        if selection == .lab, labRoute == .barometer, scenePhase == .active {
+            barometerModel.start()
+        } else {
+            barometerModel.stop()
+        }
+    }
+
+    private func resetRecordsForUITestsIfNeeded() {
+        #if DEBUG
+        guard !didResetUITestRecords,
+              ProcessInfo.processInfo.arguments.contains("-uiTestResetRecords") else { return }
+        didResetUITestRecords = true
+        try? MeasurementRecordStore(context: modelContext).deleteAll()
+        #endif
     }
 }
 
 private struct AppNavigationBar: View {
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.senseTheme) private var theme
-    @Binding var selection: AppSection
+    let selection: AppSection
+    let onSelect: (AppSection) -> Void
 
     var body: some View {
         HStack(spacing: 4) {
             ForEach(AppSection.allCases) { section in
                 Button {
-                    selection = section
+                    onSelect(section)
                 } label: {
                     VStack(spacing: 4) {
                         Image(systemName: section.icon)

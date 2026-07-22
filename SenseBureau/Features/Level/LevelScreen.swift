@@ -21,6 +21,7 @@ struct LevelScreen: View {
                         module: settings.text("level.module")
                     )
                     LevelSignalPanel(model: model)
+                    SensorStateNotice(state: model.state)
                     LevelAxisStrip(attitude: model.attitude)
                     LevelGuidancePanel(model: model)
                     SensorDemoNote(isDemo: model.isDemo)
@@ -70,6 +71,7 @@ struct LevelScreen: View {
         case .active: settings.text(model.isDemo ? "status.demo" : "status.live")
         case .paused: settings.text("status.paused")
         case .unsupported: settings.text("status.unsupported")
+        case .denied: settings.text("status.denied")
         case .failed: settings.text("status.error")
         }
     }
@@ -87,7 +89,7 @@ private struct LevelSignalPanel: View {
                     .font(SenseTheme.Typography.instrument(12))
                     .tracking(1.2)
                 HStack(alignment: .lastTextBaseline, spacing: 5) {
-                    Text(model.state == .unsupported ? "—" : String(format: "%.1f", model.tiltMagnitude))
+                    Text(model.state.preventsMeasurementDisplay ? "—" : String(format: "%.1f", model.tiltMagnitude))
                         .font(SenseTheme.Typography.displayDot(60))
                         .contentTransition(.numericText())
                         .lineLimit(1)

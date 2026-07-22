@@ -61,7 +61,10 @@ final class MeasurementRecordStore {
     }
 
     func deleteAll() throws {
-        try context.delete(model: MeasurementRecord.self)
+        let records = try context.fetch(FetchDescriptor<MeasurementRecord>())
+        for record in records {
+            context.delete(record)
+        }
         try context.save()
     }
 }

@@ -25,6 +25,7 @@ struct MagneticFieldScreen: View {
                         onShowSettings: { isShowingSettings = true }
                     )
                     SignalPanel(model: model)
+                    SensorStateNotice(state: model.state)
                     MetricStrip(model: model)
                     AxisPanel(vector: model.latestVector)
                     HistoryPanel(
@@ -107,6 +108,8 @@ struct MagneticFieldScreen: View {
             settings.text("status.paused")
         case .unsupported:
             settings.text("status.unsupported")
+        case .denied:
+            settings.text("status.denied")
         case .failed:
             settings.text("status.error")
         }
@@ -192,7 +195,7 @@ private struct SignalPanel: View {
             }
 
             HStack(alignment: .lastTextBaseline, spacing: 8) {
-                Text(model.state == .unsupported ? "—" : String(Int(model.fieldStrength.rounded())))
+                Text(model.state.preventsMeasurementDisplay ? "—" : String(Int(model.fieldStrength.rounded())))
                     .font(SenseTheme.Typography.displayDot(76))
                     .contentTransition(.numericText())
                     .lineLimit(1)
@@ -510,7 +513,7 @@ private struct ControlDeck: View {
             }
             .buttonStyle(InstrumentButtonStyle(kind: .secondary))
             .accessibilityIdentifier("calibrateButton")
-            .disabled(model.state == .unsupported)
+            .disabled(model.state != .active)
 
             Button(action: model.togglePause) {
                 DeckButtonLabel(

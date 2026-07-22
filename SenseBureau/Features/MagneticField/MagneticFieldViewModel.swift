@@ -68,7 +68,7 @@ final class MagneticFieldViewModel: ObservableObject {
         guard !isProviderRunning, state != .paused else { return }
         if !hasStartedSession {
             hasStartedSession = true
-            calibrate()
+            beginCalibration()
         }
         startProvider()
     }
@@ -80,6 +80,7 @@ final class MagneticFieldViewModel: ObservableObject {
             switch result {
             case let .success(vector): process(vector)
             case .failure:
+                provider.stop()
                 isProviderRunning = false
                 state = .failed
             }
@@ -87,6 +88,11 @@ final class MagneticFieldViewModel: ObservableObject {
     }
 
     func calibrate() {
+        guard state == .active else { return }
+        beginCalibration()
+    }
+
+    private func beginCalibration() {
         calibrationValues.removeAll(keepingCapacity: true)
         previousSmoothed = nil
         baseline = 0

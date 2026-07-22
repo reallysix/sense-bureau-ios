@@ -18,6 +18,7 @@
 "status.live" = "实时";
 "status.paused" = "已暂停";
 "status.unsupported" = "无传感器";
+"status.denied" = "未授权";
 "status.error" = "错误";
 "status.saved" = "已保存";
 "status.saveError" = "重试";
@@ -32,6 +33,12 @@
 "action.save" = "保存";
 
 "sensor.demo.note" = "模拟器演示数据 · 请使用 iPhone 测量真实运动数据。";
+"sensor.unsupported.title" = "传感器不可用";
+"sensor.unsupported.detail" = "这台 iPhone 不具备此工具所需的传感器。";
+"sensor.denied.title" = "传感器访问已关闭";
+"sensor.denied.detail" = "请在 iOS 设置中允许“运动与健身”访问，然后返回感知局。";
+"sensor.failed.title" = "测量已停止";
+"sensor.failed.detail" = "传感器返回错误，请离开当前工具后重新进入并重试。";
 
 "vibration.title" = "振动分析";
 "vibration.module" = "运动 / 02";
@@ -63,6 +70,21 @@
 "level.zero.description" = "归零会把当前位置设为参考，不会改变传感器本身的物理精度。";
 "level.accessibility.tilt" = "总倾角 %.1f 度";
 
+"barometer.title" = "气压 / 高度";
+"barometer.module" = "环境 / 04";
+"barometer.pressure" = "空气压力";
+"barometer.relativeHeight" = "相对高度";
+"barometer.pressureChange" = "气压变化";
+"barometer.peakHeight" = "高度峰值";
+"barometer.samples" = "样本";
+"barometer.history" = "高度历史";
+"barometer.historyRange" = "本次相对变化";
+"barometer.baseline" = "基准";
+"barometer.state.waiting" = "等待数据";
+"barometer.state.tracking" = "跟踪中";
+"barometer.demo.note" = "模拟器演示数据 · 请使用具备气压计的 iPhone 测量真实气压与相对高度。";
+"barometer.accessibility.pressure" = "空气压力 %.2f %@";
+
 "guide.status" = "首次使用";
 "guide.title" = "测量前须知";
 "guide.skip" = "跳过";
@@ -81,7 +103,7 @@
 
 "home.status" = "就绪";
 "home.title" = "感知实验室";
-"home.module" = "实验室 / 04";
+"home.module" = "实验室 / 00";
 "home.hero.title" = "随身传感器实验室";
 "home.hero.detail" = "把 iPhone 已有的传感器，变成清晰、实用、随手可用的测量工具。";
 "home.hero.unit" = "工具";
@@ -98,6 +120,18 @@
 "tool.barometer.detail" = "跟踪相对气压与高度变化。";
 "tool.status.ready" = "可用";
 "tool.status.next" = "后续";
+
+"records.recent" = "最近记录";
+"records.title" = "测量记录";
+"records.count" = "%d 条记录";
+"records.viewAll" = "查看全部记录";
+"records.close" = "关闭记录";
+"records.empty.title" = "暂无测量记录";
+"records.empty.detail" = "在任意仪表中保存读数后，记录会显示在这里。";
+"records.kind.magnetic" = "磁场探测";
+"records.kind.vibration" = "振动分析";
+"records.kind.level" = "水平与倾角";
+"records.kind.barometer" = "气压与高度";
 
 "nav.lab" = "实验室";
 "nav.field" = "磁场";
@@ -122,10 +156,23 @@
 "settings.haptics" = "警报触觉";
 "settings.threshold" = "警报阈值";
 "settings.measurement.description" = "磁场变化首次超过阈值时触发声音和触觉，信号回落后才会再次启用提醒。";
+"settings.units.section" = "单位";
+"settings.pressureUnit" = "气压单位";
+"settings.units.description" = "气压记录使用固定基础单位保存，切换显示单位不会改变历史测量值。";
+"settings.units.selected" = "已选择";
 "settings.capability.section" = "传感器说明";
-"settings.capability.title" = "磁场变化测量";
-"settings.capability.description" = "感知局测量磁场变化，不能识别所有金属，也不能用于安全判断。";
+"settings.capability.title" = "传感器测量边界";
+"settings.capability.description" = "感知局展示手机传感器数据与相对变化，不能识别所有金属、提供勘测级海拔，也不能替代经过校准的安全设备。";
 "settings.guide.show" = "查看测量引导";
+"settings.data.section" = "数据与隐私";
+"settings.data.title" = "仅存储在这台 iPhone";
+"settings.data.description" = "测量记录保存在 App 本地。感知局当前没有账户、云同步或分析数据上传。";
+"settings.data.clear" = "清除全部记录";
+"settings.data.error" = "无法清除记录，请重试。";
+"settings.data.confirm.title" = "清除全部记录？";
+"settings.data.confirm.message" = "这会永久删除这台 iPhone 上保存的全部测量记录。";
+"settings.data.confirm.cancel" = "取消";
+"settings.data.confirm.delete" = "全部删除";
 
 "accessibility.header" = "磁场探测，状态：%@";
 "accessibility.fieldStrength" = "磁场强度 %d 微特斯拉";

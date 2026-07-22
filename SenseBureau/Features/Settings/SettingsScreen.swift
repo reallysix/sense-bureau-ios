@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct SettingsScreen: View {
@@ -5,6 +6,10 @@ struct SettingsScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.senseTheme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.modelContext) private var modelContext
+    @Query private var records: [MeasurementRecord]
+    @State private var isConfirmingDelete = false
+    @State private var dataClearFailed = false
 
     let previewValue: Int
     let showsCloseButton: Bool
@@ -98,6 +103,31 @@ struct SettingsScreen: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
 
+                        settingsSection(title: settings.text("settings.units.section")) {
+                            VStack(alignment: .leading, spacing: SenseTheme.Spacing.medium) {
+                                Label(
+                                    settings.text("settings.pressureUnit"),
+                                    systemImage: "gauge.with.needle"
+                                )
+                                .font(.body.weight(.medium))
+                                .foregroundStyle(theme.colors.textPrimary)
+
+                                HStack(spacing: SenseTheme.Spacing.small) {
+                                    ForEach(PressureUnit.allCases) { unit in
+                                        pressureUnitButton(unit)
+                                    }
+                                }
+                            }
+                            .padding(SenseTheme.Spacing.large)
+                            .background(theme.colors.surfacePrimary)
+                            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+
+                            Text(settings.text("settings.units.description"))
+                                .font(.footnote)
+                                .foregroundStyle(theme.colors.textSecondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+
                         settingsSection(title: settings.text("settings.theme.section")) {
                             HStack(spacing: SenseTheme.Spacing.medium) {
                                 ForEach(AppTheme.allCases) { option in
@@ -160,12 +190,74 @@ struct SettingsScreen: View {
                             .background(theme.colors.surfacePrimary)
                             .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
                         }
+
+                        settingsSection(title: settings.text("settings.data.section")) {
+                            VStack(alignment: .leading, spacing: SenseTheme.Spacing.medium) {
+                                HStack {
+                                    Label(
+                                        settings.text("settings.data.title"),
+                                        systemImage: "lock.shield"
+                                    )
+                                    .font(.body.weight(.semibold))
+                                    Spacer()
+                                    Text(settings.text("records.count", records.count))
+                                        .font(SenseTheme.Typography.instrument(9))
+                                        .foregroundStyle(theme.colors.textSecondary)
+                                }
+
+                                Text(settings.text("settings.data.description"))
+                                    .font(.footnote)
+                                    .foregroundStyle(theme.colors.textSecondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+
+                                Button {
+                                    isConfirmingDelete = true
+                                } label: {
+                                    Label(
+                                        settings.text("settings.data.clear"),
+                                        systemImage: "trash"
+                                    )
+                                    .font(SenseTheme.Typography.instrument(10))
+                                    .frame(maxWidth: .infinity, minHeight: 44)
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundStyle(theme.colors.critical)
+                                .background(theme.colors.surfaceRaised)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: theme.radius.medium)
+                                        .stroke(theme.colors.critical, lineWidth: 1)
+                                }
+                                .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+                                .disabled(records.isEmpty)
+                                .opacity(records.isEmpty ? 0.45 : 1)
+                                .accessibilityIdentifier("settings.data.clear")
+
+                                if dataClearFailed {
+                                    Text(settings.text("settings.data.error"))
+                                        .font(.footnote)
+                                        .foregroundStyle(theme.colors.critical)
+                                        .accessibilityIdentifier("settings.data.error")
+                                }
+                            }
+                            .foregroundStyle(theme.colors.textPrimary)
+                            .padding(SenseTheme.Spacing.large)
+                            .background(theme.colors.surfacePrimary)
+                            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, SenseTheme.Spacing.xLarge)
                     .padding(.bottom, SenseTheme.Spacing.xxLarge)
                 }
             }
+        }
+        .alert(settings.text("settings.data.confirm.title"), isPresented: $isConfirmingDelete) {
+            Button(settings.text("settings.data.confirm.cancel"), role: .cancel) {}
+            Button(settings.text("settings.data.confirm.delete"), role: .destructive) {
+                deleteAllRecords()
+            }
+        } message: {
+            Text(settings.text("settings.data.confirm.message"))
         }
     }
 
@@ -242,6 +334,41 @@ struct SettingsScreen: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("language.\(language.rawValue)")
+    }
+
+    private func pressureUnitButton(_ unit: PressureUnit) -> some View {
+        Button {
+            settings.pressureUnit = unit
+        } label: {
+            Text(unit.symbol)
+                .font(SenseTheme.Typography.instrument(11))
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .foregroundStyle(
+                    settings.pressureUnit == unit
+                        ? theme.colors.textOnSignal
+                        : theme.colors.textPrimary
+                )
+                .background(
+                    settings.pressureUnit == unit
+                        ? theme.colors.signalPrimary
+                        : theme.colors.surfaceRaised
+                )
+                .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("settings.pressureUnit.\(unit.rawValue)")
+        .accessibilityValue(
+            settings.pressureUnit == unit ? settings.text("settings.units.selected") : ""
+        )
+    }
+
+    private func deleteAllRecords() {
+        do {
+            try MeasurementRecordStore(context: modelContext).deleteAll()
+            dataClearFailed = false
+        } catch {
+            dataClearFailed = true
+        }
     }
 }
 

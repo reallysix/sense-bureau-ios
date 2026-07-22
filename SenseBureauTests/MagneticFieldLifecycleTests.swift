@@ -53,6 +53,7 @@ final class MagneticFieldLifecycleTests: XCTestCase {
 
         model.togglePause()
         model.start()
+        model.calibrate()
 
         XCTAssertEqual(model.state, .paused)
         XCTAssertEqual(provider.startCount, 1)
@@ -63,6 +64,20 @@ final class MagneticFieldLifecycleTests: XCTestCase {
         XCTAssertEqual(model.state, .active)
         XCTAssertEqual(provider.startCount, 2)
         XCTAssertTrue(model.isProviderRunning)
+    }
+
+    func testProviderFailureStopsUpdates() {
+        let provider = FakeMagnetometerProvider()
+        let model = MagneticFieldViewModel(
+            provider: provider,
+            feedback: FakeMeasurementFeedback()
+        )
+        model.start()
+        provider.fail()
+
+        XCTAssertEqual(model.state, .failed)
+        XCTAssertFalse(model.isProviderRunning)
+        XCTAssertEqual(provider.stopCount, 1)
     }
 
     func testConfiguredFeedbackAndRawAxesAreUsed() {
@@ -154,4 +169,12 @@ private final class FakeMagnetometerProvider: MagnetometerProviding {
     func send(_ vector: MagneticVector) {
         handler?(.success(vector))
     }
+
+    func fail() {
+        handler?(.failure(FakeMagnetometerError.failed))
+    }
+}
+
+private enum FakeMagnetometerError: Error {
+    case failed
 }

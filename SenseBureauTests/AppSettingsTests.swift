@@ -31,6 +31,7 @@ final class AppSettingsTests: XCTestCase {
         XCTAssertTrue(settings.soundEnabled)
         XCTAssertTrue(settings.hapticsEnabled)
         XCTAssertEqual(settings.alertThreshold, 30)
+        XCTAssertEqual(settings.pressureUnit, .hectopascals)
         XCTAssertFalse(settings.hasSeenMagneticGuide)
     }
 
@@ -43,12 +44,14 @@ final class AppSettingsTests: XCTestCase {
         settings.soundEnabled = false
         settings.hapticsEnabled = false
         settings.alertThreshold = 55
+        settings.pressureUnit = .kilopascals
         settings.hasSeenMagneticGuide = true
 
         let restored = AppSettings(defaults: defaults)
         XCTAssertFalse(restored.soundEnabled)
         XCTAssertFalse(restored.hapticsEnabled)
         XCTAssertEqual(restored.alertThreshold, 55)
+        XCTAssertEqual(restored.pressureUnit, .kilopascals)
         XCTAssertTrue(restored.hasSeenMagneticGuide)
     }
 

@@ -21,6 +21,7 @@ struct VibrationScreen: View {
                         module: settings.text("vibration.module")
                     )
                     VibrationSignalPanel(model: model)
+                    SensorStateNotice(state: model.state)
                     VibrationMetricStrip(model: model)
                     VibrationHistoryPanel(samples: model.samples)
                     SensorDemoNote(isDemo: model.isDemo)
@@ -70,6 +71,7 @@ struct VibrationScreen: View {
         case .active: settings.text(model.isDemo ? "status.demo" : "status.live")
         case .paused: settings.text("status.paused")
         case .unsupported: settings.text("status.unsupported")
+        case .denied: settings.text("status.denied")
         case .failed: settings.text("status.error")
         }
     }
@@ -93,7 +95,7 @@ private struct VibrationSignalPanel: View {
             }
 
             HStack(alignment: .lastTextBaseline, spacing: 8) {
-                Text(model.state == .unsupported ? "—" : String(Int(model.currentMagnitude.rounded())))
+                Text(model.state.preventsMeasurementDisplay ? "—" : String(Int(model.currentMagnitude.rounded())))
                     .font(SenseTheme.Typography.displayDot(72))
                     .contentTransition(.numericText())
                     .lineLimit(1)

@@ -7,6 +7,7 @@ struct LabHomeScreen: View {
     let onOpenMagneticField: () -> Void
     let onOpenVibration: () -> Void
     let onOpenLevel: () -> Void
+    let onOpenBarometer: () -> Void
 
     private var tools: [LabTool] {
         [
@@ -39,8 +40,8 @@ struct LabHomeScreen: View {
                 name: settings.text("tool.barometer.name"),
                 detail: settings.text("tool.barometer.detail"),
                 icon: "gauge.with.needle",
-                status: settings.text("tool.status.next"),
-                isAvailable: false
+                status: settings.text("tool.status.ready"),
+                isAvailable: true
             ),
         ]
     }
@@ -51,13 +52,16 @@ struct LabHomeScreen: View {
                 header
                 heroPanel
 
+                RecentRecordsSection()
+                    .padding(.top, SenseTheme.Spacing.small)
+
                 HStack {
                     Text(settings.text("home.tools"))
                         .font(SenseTheme.Typography.instrument(11))
                         .tracking(1.2)
                         .foregroundStyle(theme.colors.textPrimary)
                     Spacer()
-                    Text(settings.text("home.readyCount", 3, tools.count))
+                    Text(settings.text("home.readyCount", 4, tools.count))
                         .font(SenseTheme.Typography.instrument(9))
                         .foregroundStyle(theme.colors.textSecondary)
                 }
@@ -74,7 +78,7 @@ struct LabHomeScreen: View {
                             case .level:
                                 onOpenLevel()
                             case .barometer:
-                                break
+                                onOpenBarometer()
                             }
                         } label: {
                             LabToolCard(tool: tool)
@@ -84,6 +88,7 @@ struct LabHomeScreen: View {
                         .accessibilityIdentifier("tool.\(tool.id.rawValue)")
                     }
                 }
+
             }
             .padding(.horizontal, 20)
             .padding(.top, 8)

@@ -19,6 +19,27 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 }
 
+enum PressureUnit: String, CaseIterable, Identifiable {
+    case hectopascals
+    case kilopascals
+
+    var id: String { rawValue }
+
+    var symbol: String {
+        switch self {
+        case .hectopascals: "hPa"
+        case .kilopascals: "kPa"
+        }
+    }
+
+    func value(fromKPa value: Double) -> Double {
+        switch self {
+        case .hectopascals: value * 10
+        case .kilopascals: value
+        }
+    }
+}
+
 @MainActor
 final class AppSettings: ObservableObject {
     private enum Keys {
@@ -27,6 +48,7 @@ final class AppSettings: ObservableObject {
         static let soundEnabled = "appSoundEnabled"
         static let hapticsEnabled = "appHapticsEnabled"
         static let alertThreshold = "appAlertThreshold"
+        static let pressureUnit = "appPressureUnit"
         static let hasSeenMagneticGuide = "hasSeenMagneticGuide"
     }
 
@@ -62,6 +84,12 @@ final class AppSettings: ObservableObject {
         }
     }
 
+    @Published var pressureUnit: PressureUnit {
+        didSet {
+            defaults.set(pressureUnit.rawValue, forKey: Keys.pressureUnit)
+        }
+    }
+
     @Published var hasSeenMagneticGuide: Bool {
         didSet {
             defaults.set(hasSeenMagneticGuide, forKey: Keys.hasSeenMagneticGuide)
@@ -83,6 +111,9 @@ final class AppSettings: ObservableObject {
         alertThreshold = defaults.object(forKey: Keys.alertThreshold) == nil
             ? 30
             : defaults.double(forKey: Keys.alertThreshold)
+        pressureUnit = PressureUnit(
+            rawValue: defaults.string(forKey: Keys.pressureUnit) ?? ""
+        ) ?? .hectopascals
         hasSeenMagneticGuide = defaults.bool(forKey: Keys.hasSeenMagneticGuide)
     }
 

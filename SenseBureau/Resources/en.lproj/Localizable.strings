@@ -18,6 +18,7 @@
 "status.live" = "LIVE";
 "status.paused" = "PAUSED";
 "status.unsupported" = "NO SENSOR";
+"status.denied" = "NO ACCESS";
 "status.error" = "ERROR";
 "status.saved" = "SAVED";
 "status.saveError" = "RETRY";
@@ -32,6 +33,12 @@
 "action.save" = "SAVE";
 
 "sensor.demo.note" = "Simulator demo data · use an iPhone to measure real motion.";
+"sensor.unsupported.title" = "Sensor unavailable";
+"sensor.unsupported.detail" = "This iPhone does not provide the sensor required by this tool.";
+"sensor.denied.title" = "Sensor access is off";
+"sensor.denied.detail" = "Allow Motion & Fitness access in iOS Settings, then return to Sense Bureau.";
+"sensor.failed.title" = "Measurement stopped";
+"sensor.failed.detail" = "The sensor returned an error. Leave this tool and open it again to retry.";
 
 "vibration.title" = "VIBRATION";
 "vibration.module" = "MOTION / 02";
@@ -63,6 +70,21 @@
 "level.zero.description" = "ZERO treats the current position as the reference; it does not change the sensor's physical accuracy.";
 "level.accessibility.tilt" = "Total tilt %.1f degrees";
 
+"barometer.title" = "PRESSURE";
+"barometer.module" = "ENV / 04";
+"barometer.pressure" = "AIR PRESSURE";
+"barometer.relativeHeight" = "RELATIVE HEIGHT";
+"barometer.pressureChange" = "PRESSURE Δ";
+"barometer.peakHeight" = "PEAK HEIGHT";
+"barometer.samples" = "SAMPLES";
+"barometer.history" = "HEIGHT HISTORY";
+"barometer.historyRange" = "RELATIVE / SESSION";
+"barometer.baseline" = "BASELINE";
+"barometer.state.waiting" = "WAITING";
+"barometer.state.tracking" = "TRACKING";
+"barometer.demo.note" = "Simulator demo data · use an iPhone with a barometer to measure real pressure and relative height.";
+"barometer.accessibility.pressure" = "Air pressure %.2f %@";
+
 "guide.status" = "FIRST RUN";
 "guide.title" = "BEFORE YOU MEASURE";
 "guide.skip" = "SKIP";
@@ -81,7 +103,7 @@
 
 "home.status" = "READY";
 "home.title" = "SENSE LAB";
-"home.module" = "LAB / 04";
+"home.module" = "LAB / 00";
 "home.hero.title" = "POCKET SENSOR LAB";
 "home.hero.detail" = "Turn the sensors already inside your iPhone into clear, useful instruments.";
 "home.hero.unit" = "TOOLS";
@@ -98,6 +120,18 @@
 "tool.barometer.detail" = "Track relative pressure and height changes.";
 "tool.status.ready" = "READY";
 "tool.status.next" = "NEXT";
+
+"records.recent" = "RECENT RECORDS";
+"records.title" = "MEASUREMENT RECORDS";
+"records.count" = "%d RECORDS";
+"records.viewAll" = "VIEW ALL RECORDS";
+"records.close" = "Close records";
+"records.empty.title" = "No saved measurements";
+"records.empty.detail" = "Save a reading from any instrument and it will appear here.";
+"records.kind.magnetic" = "Magnetic Field";
+"records.kind.vibration" = "Vibration";
+"records.kind.level" = "Level & Tilt";
+"records.kind.barometer" = "Pressure & Height";
 
 "nav.lab" = "LAB";
 "nav.field" = "FIELD";
@@ -122,10 +156,23 @@
 "settings.haptics" = "Alert haptics";
 "settings.threshold" = "Alert threshold";
 "settings.measurement.description" = "Sound and haptics trigger once when the change crosses your threshold, then reset after the signal falls.";
+"settings.units.section" = "UNITS";
+"settings.pressureUnit" = "Pressure unit";
+"settings.units.description" = "Pressure records are stored in a stable base unit, so changing the display unit does not alter saved measurements.";
+"settings.units.selected" = "Selected";
 "settings.capability.section" = "ABOUT THE SENSOR";
-"settings.capability.title" = "Magnetic-field measurement";
-"settings.capability.description" = "Sense Bureau measures magnetic-field changes. It does not identify every metal and must not be used for safety decisions.";
+"settings.capability.title" = "Sensor measurement boundaries";
+"settings.capability.description" = "Sense Bureau reports phone sensor data and relative changes. It does not identify every metal, provide survey-grade altitude, or replace calibrated safety equipment.";
 "settings.guide.show" = "SHOW MEASUREMENT GUIDE";
+"settings.data.section" = "DATA & PRIVACY";
+"settings.data.title" = "Stored on this iPhone";
+"settings.data.description" = "Measurement records stay in the app's local storage. Sense Bureau has no account, cloud sync, or analytics upload.";
+"settings.data.clear" = "CLEAR ALL RECORDS";
+"settings.data.error" = "Records could not be cleared. Please try again.";
+"settings.data.confirm.title" = "Clear all records?";
+"settings.data.confirm.message" = "This permanently deletes every saved measurement from this iPhone.";
+"settings.data.confirm.cancel" = "Cancel";
+"settings.data.confirm.delete" = "Delete All";
 
 "accessibility.header" = "Magnetic field, status %@";
 "accessibility.fieldStrength" = "Field strength %d microteslas";
