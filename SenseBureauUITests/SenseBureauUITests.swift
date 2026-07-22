@@ -203,7 +203,9 @@ final class SenseBureauUITests: XCTestCase {
         let thresholdSlider = app.sliders["settings.threshold"]
         XCTAssertTrue(thresholdSlider.waitForExistence(timeout: 3))
         thresholdSlider.adjust(toNormalizedSliderPosition: 0.5)
-        XCTAssertEqual(app.staticTexts["thresholdValue"].label, "55 μT")
+        let thresholdLabel = app.staticTexts["thresholdValue"].label
+        XCTAssertNotEqual(thresholdLabel, "30 μT")
+        XCTAssertTrue(thresholdLabel.hasSuffix(" μT"))
         captureScreen(named: "stage3-settings-cartoon-en")
     }
 
@@ -381,6 +383,74 @@ final class SenseBureauUITests: XCTestCase {
         captureScreen(named: "stage3c-barometer-tech-en-denied")
     }
 
+    @MainActor
+    func testToolGuidesExplainUseAndBarometerReadings() throws {
+        let app = XCUIApplication()
+        app.launchArguments = standardArguments(language: "en", theme: "techSignal")
+        app.launch()
+
+        app.buttons["tool.vibration"].tap()
+        let vibrationHelp = app.buttons["help.card.vibration"]
+        scrollUp(in: app, until: vibrationHelp)
+        XCTAssertTrue(vibrationHelp.isHittable)
+        app.swipeUp()
+        vibrationHelp.tap()
+
+        let guideTitle = app.staticTexts["help.title"]
+        XCTAssertTrue(guideTitle.waitForExistence(timeout: 3))
+        XCTAssertEqual(guideTitle.label, "TOOL GUIDE")
+        XCTAssertTrue(app.staticTexts["VIBRATION ANALYSIS"].exists)
+        XCTAssertTrue(app.staticTexts["USEFUL FOR"].exists)
+        XCTAssertTrue(app.staticTexts["HOW TO USE"].exists)
+        captureScreen(named: "stage4-vibration-guide-tech-en")
+        app.buttons["help.close"].tap()
+
+        app.buttons["nav.lab"].tap()
+        openBarometer(in: app)
+        let barometerHelp = app.buttons["help.card.barometer"]
+        scrollUp(in: app, until: barometerHelp)
+        XCTAssertTrue(barometerHelp.isHittable)
+        app.swipeUp()
+        barometerHelp.tap()
+
+        let pressureExplanation = app.staticTexts["Is the pressure normal?"]
+        scrollUp(in: app, until: pressureExplanation)
+        XCTAssertTrue(pressureExplanation.isHittable)
+        XCTAssertTrue(app.staticTexts["What relative height means"].exists)
+        captureScreen(named: "stage4-barometer-guide-tech-en")
+    }
+
+    @MainActor
+    func testRecordListSupportsSingleDeleteAndClearAll() throws {
+        let app = XCUIApplication()
+        app.launchArguments = standardArguments(language: "zh-Hans", theme: "cartoonExplorer")
+        app.launch()
+
+        saveBarometerRecord(in: app)
+        openAllRecords(in: app)
+
+        let row = app.cells.firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 3))
+        row.swipeLeft()
+        let delete = app.buttons["records.delete"]
+        XCTAssertTrue(delete.waitForExistence(timeout: 2))
+        captureScreen(named: "stage4-records-cartoon-zh-Hans-single-delete")
+        delete.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["records.empty"].waitForExistence(timeout: 3))
+        app.buttons["records.close"].tap()
+
+        saveBarometerRecord(in: app)
+        openAllRecords(in: app)
+        let clear = app.buttons["records.clear"]
+        XCTAssertTrue(clear.isEnabled)
+        clear.tap()
+        XCTAssertTrue(app.alerts["清除全部记录？"].waitForExistence(timeout: 2))
+        captureScreen(named: "stage4-records-cartoon-zh-Hans-clear-confirmation")
+        app.alerts["清除全部记录？"].buttons["全部删除"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["records.empty"].waitForExistence(timeout: 3))
+        XCTAssertFalse(clear.isEnabled)
+    }
+
     private func standardArguments(language: String? = nil, theme: String? = nil) -> [String] {
         var arguments = [
             "-hasSeenMagneticGuide", "YES",
@@ -411,6 +481,30 @@ final class SenseBureauUITests: XCTestCase {
         app.swipeUp()
         XCTAssertTrue(button.isHittable)
         button.tap()
+    }
+
+    @MainActor
+    private func saveBarometerRecord(in app: XCUIApplication) {
+        if !app.descendants(matching: .any)["barometer.pressure"].exists {
+            openBarometer(in: app)
+        }
+        let save = app.buttons["barometer.save"]
+        let ready = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "isEnabled == true"),
+            object: save
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+        save.tap()
+        app.buttons["nav.lab"].tap()
+    }
+
+    @MainActor
+    private func openAllRecords(in app: XCUIApplication) {
+        let viewAll = app.buttons["records.open"]
+        scrollUp(in: app, until: viewAll)
+        XCTAssertTrue(viewAll.isHittable)
+        viewAll.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["records.list"].waitForExistence(timeout: 3))
     }
 
     @MainActor

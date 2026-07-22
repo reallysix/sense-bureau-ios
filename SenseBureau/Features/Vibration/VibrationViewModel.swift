@@ -24,9 +24,10 @@ final class VibrationViewModel: ObservableObject {
 
     private let provider: any VibrationProviding
     private let feedback: any MeasurementFeedbackProviding
-    private let calibrationSampleCount = 30
-    private var calibrationValues: [Double] = []
-    private var baseline = 0.0
+    private let calibrationSampleCount = 50
+    private var calibrationVectors: [AccelerationVector] = []
+    private var baselineVector = AccelerationVector(x: 0, y: 0, z: 0)
+    private var noiseFloorMG = 3.0
     private var previousSmoothed: Double?
     private var hasStartedSession = false
     private var soundEnabled = true
@@ -71,9 +72,10 @@ final class VibrationViewModel: ObservableObject {
 
     func calibrate() {
         guard state != .paused else { return }
-        calibrationValues.removeAll(keepingCapacity: true)
+        calibrationVectors.removeAll(keepingCapacity: true)
         previousSmoothed = nil
-        baseline = 0
+        baselineVector = AccelerationVector(x: 0, y: 0, z: 0)
+        noiseFloorMG = 3
         currentMagnitude = 0
         rmsMagnitude = 0
         peakMagnitude = 0
@@ -109,15 +111,17 @@ final class VibrationViewModel: ObservableObject {
     }
 
     private func process(_ vector: AccelerationVector) {
-        let rawMagnitude = VibrationMath.magnitudeMG(of: vector)
-
         if isCalibrating {
-            calibrationValues.append(rawMagnitude)
-            let progress = min(1, Double(calibrationValues.count) / Double(calibrationSampleCount))
+            calibrationVectors.append(vector)
+            let progress = min(1, Double(calibrationVectors.count) / Double(calibrationSampleCount))
             state = .calibrating(progress: progress)
-            if calibrationValues.count >= calibrationSampleCount,
-               let calibratedBaseline = VibrationMath.baseline(from: calibrationValues) {
-                baseline = calibratedBaseline
+            if calibrationVectors.count >= calibrationSampleCount,
+               let calibratedBaseline = VibrationMath.baselineVector(from: calibrationVectors) {
+                baselineVector = calibratedBaseline
+                noiseFloorMG = VibrationMath.noiseFloorMG(
+                    from: calibrationVectors,
+                    baseline: calibratedBaseline
+                )
                 state = .active
                 feedback.calibrationCompleted(
                     soundEnabled: soundEnabled,
@@ -128,11 +132,15 @@ final class VibrationViewModel: ObservableObject {
         }
 
         guard state == .active else { return }
-        let adjusted = max(0, rawMagnitude - baseline)
+        let adjusted = VibrationMath.noiseGatedMagnitudeMG(
+            of: vector,
+            baseline: baselineVector,
+            noiseFloorMG: noiseFloorMG
+        )
         let smoothed = VibrationMath.smoothed(previous: previousSmoothed, current: adjusted)
         previousSmoothed = smoothed
         currentMagnitude = smoothed
-        peakMagnitude = max(peakMagnitude, smoothed)
+        peakMagnitude = max(peakMagnitude, adjusted)
         samples.append(VibrationSample(timestamp: .now, magnitude: smoothed))
         if samples.count > 150 { samples.removeFirst(samples.count - 150) }
         rmsMagnitude = VibrationMath.rms(of: Array(samples.suffix(50).map(\.magnitude)))

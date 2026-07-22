@@ -8,6 +8,7 @@ struct VibrationScreen: View {
     @Environment(\.senseTheme) private var theme
     @ObservedObject var model: VibrationViewModel
     @State private var recordSaveState: SensorRecordSaveState = .ready
+    @State private var isShowingHelp = false
 
     var body: some View {
         ZStack {
@@ -24,6 +25,7 @@ struct VibrationScreen: View {
                     SensorStateNotice(state: model.state)
                     VibrationMetricStrip(model: model)
                     VibrationHistoryPanel(samples: model.samples)
+                    SensorHelpCard(kind: .vibration) { isShowingHelp = true }
                     SensorDemoNote(isDemo: model.isDemo)
                 }
                 .padding(.horizontal, 20)
@@ -37,6 +39,10 @@ struct VibrationScreen: View {
                 recordSaveState: recordSaveState,
                 onSave: saveRecord
             )
+        }
+        .fullScreenCover(isPresented: $isShowingHelp) {
+            SensorHelpScreen(kind: .vibration)
+                .environmentObject(settings)
         }
     }
 
@@ -217,6 +223,7 @@ private struct VibrationHistoryPanel: View {
                     AxisValueLabel().foregroundStyle(theme.colors.textOnData.opacity(0.6))
                 }
             }
+            .chartYScale(domain: 0...max(10, (samples.map(\.magnitude).max() ?? 0) * 1.1))
             .frame(height: 150)
             .accessibilityIdentifier("vibration.history")
         }

@@ -43,6 +43,22 @@ final class MeasurementRecordStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testDeleteRemovesOnlySelectedRecord() throws {
+        let container = try makeContainer()
+        let store = MeasurementRecordStore(context: container.mainContext)
+        let kept = MeasurementRecord(kind: .barometer, value: 101.3, unit: "kPa")
+        let deleted = MeasurementRecord(kind: .vibration, value: 14, unit: "mg RMS")
+        try store.save(kept)
+        try store.save(deleted)
+
+        try store.delete(deleted)
+
+        let records = try store.recent()
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records.first?.id, kept.id)
+    }
+
+    @MainActor
     private func makeContainer() throws -> ModelContainer {
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
         return try ModelContainer(

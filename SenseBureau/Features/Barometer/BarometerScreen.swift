@@ -8,6 +8,7 @@ struct BarometerScreen: View {
     @Environment(\.senseTheme) private var theme
     @ObservedObject var model: BarometerViewModel
     @State private var recordSaveState: SensorRecordSaveState = .ready
+    @State private var isShowingHelp = false
 
     var body: some View {
         ZStack {
@@ -24,6 +25,7 @@ struct BarometerScreen: View {
                     SensorStateNotice(state: model.state)
                     BarometerMetricStrip(model: model)
                     BarometerHistoryPanel(samples: model.samples)
+                    SensorHelpCard(kind: .barometer) { isShowingHelp = true }
                     if model.isDemo {
                         SensorDemoNote(
                             isDemo: true,
@@ -42,6 +44,10 @@ struct BarometerScreen: View {
                 recordSaveState: recordSaveState,
                 onSave: saveRecord
             )
+        }
+        .fullScreenCover(isPresented: $isShowingHelp) {
+            SensorHelpScreen(kind: .barometer)
+                .environmentObject(settings)
         }
     }
 

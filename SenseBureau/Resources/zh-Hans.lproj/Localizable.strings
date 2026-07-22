@@ -85,6 +85,65 @@
 "barometer.demo.note" = "模拟器演示数据 · 请使用具备气压计的 iPhone 测量真实气压与相对高度。";
 "barometer.accessibility.pressure" = "空气压力 %.2f %@";
 
+"help.card.title" = "这个工具能做什么？";
+"help.title" = "工具使用说明";
+"help.close" = "关闭工具说明";
+"help.open.accessibility" = "查看“%@”使用说明";
+"help.useCases" = "适合用途";
+"help.steps" = "使用方法";
+"help.limits" = "能力边界";
+"help.reference" = "读数说明";
+
+"help.magnetic.title" = "磁场探测";
+"help.magnetic.summary" = "观察磁铁、钢铁物体、电机和通电设备附近的磁场变化。";
+"help.magnetic.use1" = "寻找日常物体周围相对较强的磁场区域。";
+"help.magnetic.use2" = "比较不同位置或距离下的读数变化。";
+"help.magnetic.use3" = "观察磁铁、扬声器和电机附近可重复出现的响应。";
+"help.magnetic.step1" = "取下 MagSafe 配件，并远离大型电子设备。";
+"help.magnetic.step2" = "让手机远离待测物并保持静止，完成基准校准。";
+"help.magnetic.step3" = "缓慢移动，重点比较“变化”和“峰值”，不要只看一次绝对读数。";
+"help.magnetic.limit1" = "不能可靠判断材质，也不能探测所有类型的金属。";
+"help.magnetic.limit2" = "手机壳、磁铁、电子设备以及 iPhone 本身都会影响读数。";
+
+"help.vibration.title" = "振动分析";
+"help.vibration.summary" = "使用 iPhone 加速度计比较运动强度、持续振动和短时冲击。";
+"help.vibration.use1" = "比较家电、风扇、扬声器或小型电机的振动。";
+"help.vibration.use2" = "调整后检查某个表面或支架是否变得更稳定。";
+"help.vibration.use3" = "用“峰值”捕捉短时碰撞，用“均方根”比较持续振动。";
+"help.vibration.step1" = "把手机平稳、牢固地放在表面上，每次比较保持相同位置。";
+"help.vibration.step2" = "基准校准的一秒内保持静止；系统会抑制静止时的微小传感器噪声。";
+"help.vibration.step3" = "启动振动源，在相同摆放条件下比较均方根和峰值。";
+"help.vibration.limit1" = "它不是经过校准的工业振动仪，也不能用于诊断机械故障。";
+"help.vibration.limit2" = "手部移动、松动的手机壳和不同表面都会显著影响结果。";
+
+"help.level.title" = "水平与倾角";
+"help.level.summary" = "检查表面是否水平，并查看相对于 iPhone 的 X/Y 倾斜角度。";
+"help.level.use1" = "辅助调整置物架、相框、桌面等日常物体。";
+"help.level.use2" = "比较坡度，或重复设置一个常用设备角度。";
+"help.level.use3" = "用“归零”把当前位置设为自定义参考。";
+"help.level.step1" = "每次都使用同一条手机边框或同一背面位置。";
+"help.level.step2" = "等待气泡稳定，再朝中心方向微调。";
+"help.level.step3" = "只有需要相对参考而不是真实水平时，才使用“归零”。";
+"help.level.limit1" = "镜头凸起和手机壳可能让手机无法与表面保持平行。";
+"help.level.limit2" = "它不是勘测或施工级的校准水平仪。";
+
+"help.barometer.title" = "气压与高度";
+"help.barometer.summary" = "跟踪环境气压，以及相对于本次基准位置的小范围高度变化。";
+"help.barometer.use1" = "在大致相同地点观察当地气压变化趋势。";
+"help.barometer.use2" = "比较楼层、楼梯、电梯或短距离爬升的高度变化。";
+"help.barometer.use3" = "记录同一次测量中的相对气压与高度变化。";
+"help.barometer.step1" = "在想设为零点的位置或楼层点击“基准”。";
+"help.barometer.step2" = "保持本次测量不中断并移动，观察“相对高度”。";
+"help.barometer.step3" = "开始新的比较或环境条件改变后，重新设置基准。";
+"help.barometer.limit1" = "天气、温度、通风和密闭空间会影响根据气压推算的高度。";
+"help.barometer.limit2" = "不能提供勘测级海拔，也不能测出手机当前离地面的高度。";
+"help.barometer.reference.pressure.title" = "当前气压正常吗？";
+"help.barometer.reference.pressure.detail" = "1013.25 hPa 是标准海平面参考值，不是医学正常线；当地读数会随海拔和天气变化。";
+"help.barometer.reference.body.title" = "对身体可能有什么影响？";
+"help.barometer.reference.body.detail" = "普通气压读数不能评估健康。快速或幅度较大的气压变化可能引起耳部、鼻窦不适，鼻塞时会更明显。";
+"help.barometer.reference.height.title" = "相对高度表示什么？";
+"help.barometer.reference.height.detail" = "它是从“基准”开始推算的高度变化，不是绝对海拔，也无法知道当前距离地面多高。";
+
 "guide.status" = "首次使用";
 "guide.title" = "测量前须知";
 "guide.skip" = "跳过";
@@ -132,6 +191,10 @@
 "records.kind.vibration" = "振动分析";
 "records.kind.level" = "水平与倾角";
 "records.kind.barometer" = "气压与高度";
+"records.clear" = "清除全部记录";
+"records.delete" = "删除记录";
+"records.error" = "无法修改记录，请重试。";
+"records.error.ok" = "好";
 
 "nav.lab" = "实验室";
 "nav.field" = "磁场";

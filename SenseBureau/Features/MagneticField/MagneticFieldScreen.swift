@@ -9,6 +9,7 @@ struct MagneticFieldScreen: View {
     @ObservedObject var model: MagneticFieldViewModel
     @State private var isShowingSettings = false
     @State private var isShowingGuide = false
+    @State private var isShowingHelp = false
     @State private var recordSaveState: RecordSaveState = .ready
 
     var body: some View {
@@ -32,6 +33,7 @@ struct MagneticFieldScreen: View {
                         samples: model.samples,
                         alertThreshold: model.alertThreshold
                     )
+                    SensorHelpCard(kind: .magnetic) { isShowingHelp = true }
                     CapabilityNote(isDemo: model.isDemo)
                 }
                 .padding(.horizontal, 20)
@@ -57,6 +59,10 @@ struct MagneticFieldScreen: View {
                 isShowingGuide = false
             }
             .environmentObject(settings)
+        }
+        .fullScreenCover(isPresented: $isShowingHelp) {
+            SensorHelpScreen(kind: .magnetic)
+                .environmentObject(settings)
         }
         .onAppear {
             isShowingGuide = !settings.hasSeenMagneticGuide

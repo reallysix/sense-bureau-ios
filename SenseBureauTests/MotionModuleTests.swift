@@ -20,7 +20,7 @@ final class MotionModuleTests: XCTestCase {
         model.start()
         XCTAssertEqual(provider.startCount, 1)
 
-        for _ in 0..<30 {
+        for _ in 0..<50 {
             provider.send(AccelerationVector(x: 0, y: 0, z: 0))
         }
         XCTAssertEqual(model.state, .active)
@@ -44,6 +44,25 @@ final class MotionModuleTests: XCTestCase {
         model.togglePause()
         XCTAssertEqual(model.state, .active)
         XCTAssertEqual(provider.startCount, 2)
+    }
+
+    func testVibrationNoiseGateSuppressesStationarySensorJitter() {
+        let provider = FakeVibrationProvider()
+        let model = VibrationViewModel(provider: provider, feedback: MotionFeedbackSpy())
+        model.start()
+
+        for index in 0..<50 {
+            let jitter = index.isMultiple(of: 2) ? 0.001 : -0.001
+            provider.send(AccelerationVector(x: jitter, y: -jitter, z: jitter * 0.5))
+        }
+
+        provider.send(AccelerationVector(x: 0.0015, y: -0.001, z: 0.0005))
+        XCTAssertEqual(model.currentMagnitude, 0, accuracy: 0.001)
+        XCTAssertEqual(model.rmsMagnitude, 0, accuracy: 0.001)
+
+        provider.send(AccelerationVector(x: 0.03, y: 0.04, z: 0))
+        XCTAssertGreaterThan(model.currentMagnitude, 9)
+        XCTAssertGreaterThan(model.peakMagnitude, 45)
     }
 
     func testLevelMathAndZeroReference() {

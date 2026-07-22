@@ -8,6 +8,7 @@ struct LevelScreen: View {
     @Environment(\.senseTheme) private var theme
     @ObservedObject var model: LevelViewModel
     @State private var recordSaveState: SensorRecordSaveState = .ready
+    @State private var isShowingHelp = false
 
     var body: some View {
         ZStack {
@@ -24,6 +25,7 @@ struct LevelScreen: View {
                     SensorStateNotice(state: model.state)
                     LevelAxisStrip(attitude: model.attitude)
                     LevelGuidancePanel(model: model)
+                    SensorHelpCard(kind: .level) { isShowingHelp = true }
                     SensorDemoNote(isDemo: model.isDemo)
                 }
                 .padding(.horizontal, 20)
@@ -37,6 +39,10 @@ struct LevelScreen: View {
                 recordSaveState: recordSaveState,
                 onSave: saveRecord
             )
+        }
+        .fullScreenCover(isPresented: $isShowingHelp) {
+            SensorHelpScreen(kind: .level)
+                .environmentObject(settings)
         }
     }
 

@@ -26,6 +26,36 @@ enum VibrationMath {
         return kept.reduce(0, +) / Double(kept.count)
     }
 
+    static func baselineVector(from vectors: [AccelerationVector]) -> AccelerationVector? {
+        guard
+            let x = baseline(from: vectors.map(\.x)),
+            let y = baseline(from: vectors.map(\.y)),
+            let z = baseline(from: vectors.map(\.z))
+        else { return nil }
+        return AccelerationVector(x: x, y: y, z: z)
+    }
+
+    static func noiseFloorMG(
+        from vectors: [AccelerationVector],
+        baseline: AccelerationVector
+    ) -> Double {
+        let magnitudes = vectors
+            .map { correctedMagnitudeMG(of: $0, baseline: baseline) }
+            .sorted()
+        guard !magnitudes.isEmpty else { return 3 }
+        let percentileIndex = Int((Double(magnitudes.count - 1) * 0.95).rounded(.up))
+        return min(12, max(3, magnitudes[percentileIndex] * 1.5))
+    }
+
+    static func noiseGatedMagnitudeMG(
+        of vector: AccelerationVector,
+        baseline: AccelerationVector,
+        noiseFloorMG: Double
+    ) -> Double {
+        let magnitude = correctedMagnitudeMG(of: vector, baseline: baseline)
+        return magnitude <= noiseFloorMG ? 0 : magnitude
+    }
+
     static func smoothed(previous: Double?, current: Double, alpha: Double = 0.2) -> Double {
         guard let previous else { return current }
         return alpha * current + (1 - alpha) * previous
@@ -35,5 +65,16 @@ enum VibrationMath {
         guard !values.isEmpty else { return 0 }
         let meanSquare = values.reduce(0) { $0 + $1 * $1 } / Double(values.count)
         return sqrt(meanSquare)
+    }
+
+    private static func correctedMagnitudeMG(
+        of vector: AccelerationVector,
+        baseline: AccelerationVector
+    ) -> Double {
+        magnitudeMG(of: AccelerationVector(
+            x: vector.x - baseline.x,
+            y: vector.y - baseline.y,
+            z: vector.z - baseline.z
+        ))
     }
 }

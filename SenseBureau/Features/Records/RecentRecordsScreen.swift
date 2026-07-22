@@ -60,8 +60,11 @@ struct RecentRecordsSection: View {
 struct RecentRecordsScreen: View {
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.senseTheme) private var theme
     @Query(sort: \MeasurementRecord.capturedAt, order: .reverse) private var records: [MeasurementRecord]
+    @State private var isConfirmingClear = false
+    @State private var isShowingError = false
 
     var body: some View {
         ZStack {
@@ -74,6 +77,17 @@ struct RecentRecordsScreen: View {
                         .tracking(1.8)
                         .accessibilityIdentifier("records.title")
                     Spacer()
+                    Button { isConfirmingClear = true } label: {
+                        Image(systemName: "trash")
+                            .font(.system(size: 14, weight: .bold))
+                            .frame(width: 44, height: 44)
+                            .background(theme.colors.surfacePrimary)
+                            .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
+                    }
+                    .disabled(records.isEmpty)
+                    .accessibilityLabel(settings.text("records.clear"))
+                    .accessibilityIdentifier("records.clear")
+
                     Button(action: dismiss.callAsFunction) {
                         Image(systemName: "xmark")
                             .font(.system(size: 14, weight: .bold))
@@ -96,19 +110,61 @@ struct RecentRecordsScreen: View {
                         .padding(20)
                     Spacer()
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 1) {
-                            ForEach(records) { record in
-                                MeasurementRecordRow(record: record)
-                            }
+                    List {
+                        ForEach(records) { record in
+                            MeasurementRecordRow(record: record)
+                                .listRowInsets(EdgeInsets(
+                                    top: 0,
+                                    leading: 20,
+                                    bottom: SenseTheme.Spacing.small,
+                                    trailing: 20
+                                ))
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button(role: .destructive) {
+                                        delete(record)
+                                    } label: {
+                                        Label(settings.text("records.delete"), systemImage: "trash")
+                                    }
+                                    .tint(theme.colors.critical)
+                                    .accessibilityIdentifier("records.delete")
+                                }
                         }
-                        .background(theme.colors.strokeSubtle)
-                        .clipShape(RoundedRectangle(cornerRadius: theme.radius.medium))
-                        .padding(20)
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .contentMargins(.top, 20, for: .scrollContent)
                     .accessibilityIdentifier("records.list")
                 }
             }
+        }
+        .alert(settings.text("settings.data.confirm.title"), isPresented: $isConfirmingClear) {
+            Button(settings.text("settings.data.confirm.cancel"), role: .cancel) {}
+            Button(settings.text("settings.data.confirm.delete"), role: .destructive) {
+                clearAll()
+            }
+        } message: {
+            Text(settings.text("settings.data.confirm.message"))
+        }
+        .alert(settings.text("records.error"), isPresented: $isShowingError) {
+            Button(settings.text("records.error.ok"), role: .cancel) {}
+        }
+    }
+
+    private func delete(_ record: MeasurementRecord) {
+        do {
+            try MeasurementRecordStore(context: modelContext).delete(record)
+        } catch {
+            isShowingError = true
+        }
+    }
+
+    private func clearAll() {
+        do {
+            try MeasurementRecordStore(context: modelContext).deleteAll()
+        } catch {
+            isShowingError = true
         }
     }
 }

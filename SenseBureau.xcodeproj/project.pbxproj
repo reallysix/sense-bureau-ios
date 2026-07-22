@@ -11,6 +11,7 @@
 		08429B877DD68AC475DFC66F /* MeasurementFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0905F098AD96661F10A79F1 /* MeasurementFeedback.swift */; };
 		0C65D87D0E9FCEC2620EB0D5 /* SenseBureauUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E069C691175459CE728C04 /* SenseBureauUITests.swift */; };
 		0D76C42B4F78BD7EB20E92EE /* SenseBureauApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A3A28FA80314CB15DF2A4F /* SenseBureauApp.swift */; };
+		0F4A72198B6D56EFDED2BA74 /* SensorHelpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7EF14CB0A6C1A46C1DE545 /* SensorHelpScreen.swift */; };
 		19414B57AE7618675FA45E61 /* MeasurementRecordStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B155C6F67F33D38901CFA1E9 /* MeasurementRecordStoreTests.swift */; };
 		1E1225BFCC77D7CD952CA25D /* MagneticGuideScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEF145A0DFDF26D575156D /* MagneticGuideScreen.swift */; };
 		2194F757C32EEA9535FF8705 /* LevelDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAED1C75A833D19875334C33 /* LevelDomain.swift */; };
@@ -88,6 +89,7 @@
 		68A3F3D8AF90B059B157678F /* MeasurementRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementRecord.swift; sourceTree = "<group>"; };
 		7B2C83D1D768457350848314 /* MagneticFieldDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagneticFieldDomain.swift; sourceTree = "<group>"; };
 		8F29EFD99638A7AB79609F47 /* BarometerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarometerScreen.swift; sourceTree = "<group>"; };
+		8F7EF14CB0A6C1A46C1DE545 /* SensorHelpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorHelpScreen.swift; sourceTree = "<group>"; };
 		916F45AD5AF76B1D1F2870EF /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		9372538C51B80D9CD63A721E /* MeasurementSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSessionState.swift; sourceTree = "<group>"; };
 		93A1F20FB33DA1FF0511D83E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
@@ -194,6 +196,14 @@
 			path = Records;
 			sourceTree = "<group>";
 		};
+		63666EF612216ECB08C8282C /* SensorHelp */ = {
+			isa = PBXGroup;
+			children = (
+				8F7EF14CB0A6C1A46C1DE545 /* SensorHelpScreen.swift */,
+			);
+			path = SensorHelp;
+			sourceTree = "<group>";
+		};
 		81C4C000A2E70621317D3F39 /* Level */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,6 +222,7 @@
 				81C4C000A2E70621317D3F39 /* Level */,
 				D4A8FEB52A3F944BBC9E72D3 /* MagneticField */,
 				5CB51CE4EEF2A365FD7F4C69 /* Records */,
+				63666EF612216ECB08C8282C /* SensorHelp */,
 				0B020AA3297273E602FAC86B /* Settings */,
 				2B045719F41FF905730A4828 /* Vibration */,
 			);
@@ -458,6 +469,7 @@
 				D0B8F7BB23935CA295FD2C3E /* RecentRecordsScreen.swift in Sources */,
 				0D76C42B4F78BD7EB20E92EE /* SenseBureauApp.swift in Sources */,
 				3873F003801C81339AEC7D58 /* SenseTheme.swift in Sources */,
+				0F4A72198B6D56EFDED2BA74 /* SensorHelpScreen.swift in Sources */,
 				DE3A14583078A6364AC3BAE8 /* SensorModuleComponents.swift in Sources */,
 				65B403412C4F75E2D96ED44E /* SettingsScreen.swift in Sources */,
 				416099E6C7528A08BBE25284 /* VibrationDomain.swift in Sources */,

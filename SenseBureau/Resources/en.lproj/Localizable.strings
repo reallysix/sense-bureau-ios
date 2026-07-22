@@ -85,6 +85,65 @@
 "barometer.demo.note" = "Simulator demo data · use an iPhone with a barometer to measure real pressure and relative height.";
 "barometer.accessibility.pressure" = "Air pressure %.2f %@";
 
+"help.card.title" = "WHAT CAN THIS TOOL DO?";
+"help.title" = "TOOL GUIDE";
+"help.close" = "Close tool guide";
+"help.open.accessibility" = "Open usage guide for %@";
+"help.useCases" = "USEFUL FOR";
+"help.steps" = "HOW TO USE";
+"help.limits" = "KNOW THE LIMITS";
+"help.reference" = "READING GUIDE";
+
+"help.magnetic.title" = "MAGNETIC FIELD";
+"help.magnetic.summary" = "Explore nearby magnetic-field changes around magnets, steel objects, motors, and powered devices.";
+"help.magnetic.use1" = "Find relative magnetic hot spots around everyday objects.";
+"help.magnetic.use2" = "Compare how the reading changes at different positions or distances.";
+"help.magnetic.use3" = "Observe repeatable responses near magnets, speakers, and motors.";
+"help.magnetic.step1" = "Remove MagSafe accessories and move away from large electronics.";
+"help.magnetic.step2" = "Calibrate with the phone still and away from the object being checked.";
+"help.magnetic.step3" = "Move slowly and compare DELTA and PEAK rather than one isolated number.";
+"help.magnetic.limit1" = "It cannot reliably identify a material or detect every kind of metal.";
+"help.magnetic.limit2" = "Cases, magnets, electronics, and the iPhone itself can change the reading.";
+
+"help.vibration.title" = "VIBRATION ANALYSIS";
+"help.vibration.summary" = "Compare motion strength, continuous vibration, and short impacts using the iPhone accelerometer.";
+"help.vibration.use1" = "Compare vibration from appliances, fans, speakers, or small motors.";
+"help.vibration.use2" = "Check whether a surface or stand becomes steadier after an adjustment.";
+"help.vibration.use3" = "Capture short bumps with PEAK and compare continuous motion with RMS.";
+"help.vibration.step1" = "Place the phone flat and firmly on the same surface for each comparison.";
+"help.vibration.step2" = "Keep it still for the one-second baseline; tiny stationary sensor noise is suppressed.";
+"help.vibration.step3" = "Start the vibration source, then compare RMS and PEAK under the same setup.";
+"help.vibration.limit1" = "This is not a calibrated industrial vibration meter and does not diagnose machinery.";
+"help.vibration.limit2" = "Hand movement, a loose case, and different surfaces can strongly affect results.";
+
+"help.level.title" = "LEVEL & TILT";
+"help.level.summary" = "Check whether a surface is level and compare its X/Y tilt relative to the iPhone.";
+"help.level.use1" = "Align shelves, frames, desks, and other everyday surfaces.";
+"help.level.use2" = "Compare slopes and repeat a preferred device angle.";
+"help.level.use3" = "Use ZERO to treat the current position as a custom reference.";
+"help.level.step1" = "Use the same phone edge or back surface each time.";
+"help.level.step2" = "Let the bubble settle, then adjust toward the center.";
+"help.level.step3" = "Tap ZERO only when you need a relative reference instead of true level.";
+"help.level.limit1" = "Camera bumps and cases can keep the phone from sitting parallel to the surface.";
+"help.level.limit2" = "It is not a survey- or construction-grade calibrated level.";
+
+"help.barometer.title" = "PRESSURE & HEIGHT";
+"help.barometer.summary" = "Track ambient pressure and small height changes relative to a baseline set during this session.";
+"help.barometer.use1" = "Observe local pressure trends while staying in roughly the same place.";
+"help.barometer.use2" = "Compare floor-to-floor, stair, elevator, or short ascent changes.";
+"help.barometer.use3" = "Record relative pressure and height changes during one session.";
+"help.barometer.step1" = "Set BASELINE at the place or floor you want to call zero.";
+"help.barometer.step2" = "Move without resetting the session and watch RELATIVE HEIGHT.";
+"help.barometer.step3" = "Reset the baseline when starting a new comparison or after conditions change.";
+"help.barometer.limit1" = "Weather, temperature, ventilation, and sealed rooms can shift pressure-derived height.";
+"help.barometer.limit2" = "It cannot report survey-grade altitude or the phone's height above the ground.";
+"help.barometer.reference.pressure.title" = "Is the pressure normal?";
+"help.barometer.reference.pressure.detail" = "1013.25 hPa is the standard sea-level reference, not a medical normal line. Local readings vary with altitude and weather.";
+"help.barometer.reference.body.title" = "Possible body effects";
+"help.barometer.reference.body.detail" = "Ordinary readings do not assess health. Rapid or larger pressure changes can cause ear or sinus discomfort, especially with congestion.";
+"help.barometer.reference.height.title" = "What relative height means";
+"help.barometer.reference.height.detail" = "It is the estimated change since BASELINE. It is not absolute altitude and cannot know the current distance above the ground.";
+
 "guide.status" = "FIRST RUN";
 "guide.title" = "BEFORE YOU MEASURE";
 "guide.skip" = "SKIP";
@@ -132,6 +191,10 @@
 "records.kind.vibration" = "Vibration";
 "records.kind.level" = "Level & Tilt";
 "records.kind.barometer" = "Pressure & Height";
+"records.clear" = "Clear all records";
+"records.delete" = "Delete record";
+"records.error" = "Records could not be changed. Please try again.";
+"records.error.ok" = "OK";
 
 "nav.lab" = "LAB";
 "nav.field" = "FIELD";
